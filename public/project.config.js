@@ -2,7 +2,7 @@ window._BASE_CONFIG = {
   // 项目名称
   title: '模板',
   // 项目后台地址
-  baseUrl: 'http://devwsxcgzjf.tuowei.info:26666/wsxc',
+  baseUrl: 'http://localhost:3003',
   // project key
   projectKey: 'default',
   basePath: '/dist'

@@ -1,16 +1,15 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { getToken, removeToken, removeRoles, removeName, removeAvatar } from './auth'
 
 const service = axios.create({
-  // baseURL: import.meta.env.VITE_BASE_API,
-  timeout: 10000 // request timeout
+  baseURL: window._BASE_CONFIG.baseUrl,
+  timeout: 20000 // request timeout
 })
 
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
-    const token = getToken()
+    const token = '123'
     // 如果有token 就携带tokon
     if (token) {
       config.headers['Authorization'] = 'Bearer__' + token
@@ -25,10 +24,6 @@ service.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response && error.response.status === 401) {
-      removeToken()
-      removeRoles()
-      removeName()
-      removeAvatar()
       location.reload()
     }
     ElMessage({
@@ -39,4 +34,14 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+const request = (requestObj) => {
+  const { url, method, data, timeout } = requestObj
+  return service({
+    url,
+    method: method || 'post',
+    data,
+    timeout: timeout || 20000
+  })
+}
+
+export default request

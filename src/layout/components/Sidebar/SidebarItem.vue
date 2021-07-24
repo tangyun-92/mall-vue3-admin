@@ -29,6 +29,7 @@
         />
         <el-menu-item v-else :key="child.path" :index="child.path">
           <template #title>
+            <i v-if="nav.meta.icon" :class="nav.meta.icon" class="elIcon" />
             <span>{{ child.meta.title }}</span>
           </template>
         </el-menu-item>

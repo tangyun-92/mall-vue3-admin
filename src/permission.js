@@ -2,7 +2,6 @@ import { configure, start, done } from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 
 import router from './router'
-import { getToken, getRoles } from './utils/auth' // get token from cookie
 import getPageTitle from './utils/get-page-title'
 
 configure({ showSpinner: false }) // NProgress Configuration
@@ -14,7 +13,7 @@ router.beforeEach(async (to, from, next) => {
   // start progress bar
   start()
   // determine whether the user has logged in
-  const hasToken = getToken()
+  const hasToken = '123'
   if (hasToken) {
     // set page title
     document.title = getPageTitle(to.meta.title)
@@ -23,16 +22,9 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       done()
     } else {
-      const roles = getRoles()
       const routes = router.getRoutes().filter((r) => r.path === to.path)
       if (routes.length) {
-        // Permission filtering
-        const toRoute = routes[0]
-        if ((toRoute.meta && !toRoute.meta.roles) || (toRoute.meta && toRoute.meta.roles.includes(roles))) {
-          next()
-        } else {
-          next('/401')
-        }
+        next()
       } else {
         // Otherwise jump to 404
         next('/404')

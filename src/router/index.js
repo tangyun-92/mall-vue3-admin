@@ -1,5 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+/**
+ * affix -- true表示子路由下顶部的 tags 无法删除
+ */
 export const constantRoutes = [
   {
     path: '/login',
@@ -25,47 +28,47 @@ export const constantRoutes = [
   {
     path: '/',
     component: () => import('@/layout/index.vue'),
-    redirect: '/home',
+    redirect: '/system',
     children: [
       {
-        path: '/home',
-        component: () => import('@/views/home/index.vue'),
-        name: 'Home',
-        meta: { title: '首页', icon: 'el-icon-s-home', affix: true }
-      },
-      {
-        path: '/menu',
-        name: 'Menu',
-        component: () => import('@/views/menu/index.vue'),
-        meta: { title: '菜单', icon: 'el-icon-menu', roles: ['admin', 'editor'] },
-        redirect: '/menu2',
+        path: '/system',
+        component: () => import('@/views/system/index.vue'),
+        name: 'System',
+        meta: { title: '系统管理', icon: 'el-icon-position', affix: false },
+        redirect: '/system/user',
         children: [
           {
-            path: '/menu1',
-            name: 'Menu1',
-            component: () => import('@/views/menu/menu10.vue'),
-            meta: { title: '菜单1', roles: ['admin', 'editor'] },
-            redirect: '/menu1-2',
-            children: [
-              {
-                path: '/menu1-1',
-                component: () => import('@/views/menu/menu11.vue'),
-                name: 'Menu1-1',
-                meta: { title: '菜单1-1', roles: ['admin'] }
-              },
-              {
-                path: '/menu1-2',
-                component: () => import('@/views/menu/menu12.vue'),
-                name: 'Menu1-2',
-                meta: { title: '菜单1-2', roles: ['admin', 'editor'] }
-              }
-            ]
+            path: '/system/user',
+            name: 'User',
+            component: () => import('@/views/system/user/index.vue'),
+            meta: { title: '用户管理', icon: 'el-icon-position' }
           },
           {
-            path: '/menu2',
-            component: () => import('@/views/menu/menu2.vue'),
-            name: 'Menu2',
-            meta: { title: '菜单2', roles: ['admin', 'editor'] }
+            path: '/system/role',
+            name: 'Role',
+            component: () => import('@/views/system/role/index.vue'),
+            meta: { title: '角色管理', icon: 'el-icon-position' }
+          }
+        ]
+      },
+      {
+        path: '/goods',
+        name: 'Goods',
+        component: () => import('@/views/goods/index.vue'),
+        meta: { title: '商品管理', icon: 'el-icon-position' },
+        redirect: '/goods/category',
+        children: [
+          {
+            path: '/goods/category',
+            component: () => import('@/views/goods/category/index.vue'),
+            name: 'Category',
+            meta: { title: '品类管理', icon: 'el-icon-position' }
+          },
+          {
+            path: '/goods/parameter',
+            component: () => import('@/views/goods/parameter/index.vue'),
+            name: 'Parameter',
+            meta: { title: '参数管理', icon: 'el-icon-position' }
           }
         ]
       }
