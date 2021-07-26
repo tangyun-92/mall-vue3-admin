@@ -32,6 +32,10 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import { login } from '@/api/public'
+import AES from '@/utils/aes'
+
+var a = AES.Encrypt('123456')
+console.log(a)
 
 const router = useRouter()
 const store = useStore()
