@@ -34,9 +34,6 @@ import { ElMessage } from 'element-plus'
 import { login } from '@/api/public'
 import AES from '@/utils/aes'
 
-var a = AES.Encrypt('123456')
-console.log(a)
-
 const router = useRouter()
 const store = useStore()
 
@@ -47,7 +44,7 @@ const passwordType = ref('password')
 
 const param = reactive({
   username: 'admin',
-  password: 'F8833383029D93ACBD66F6C8D81602DD'
+  password: '123456'
 })
 
 const rules = reactive({
@@ -69,7 +66,10 @@ const submitForm = async () => {
     if (valid) {
       btnLoading.value = true
       // 访问登录接口
-      const res = await login(param)
+      const res = await login({
+        username: param.username,
+        password: AES.encrypt(param.password)
+      })
       store.commit('user/SET_TOKEN', res.data.token)
       router.push('/')
       ElMessage.success(res.message)

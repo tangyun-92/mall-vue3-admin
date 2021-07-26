@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 23:53:51
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-26 17:19:41
+ * @Last Modified time: 2021-07-26 22:37:18
  */
 
 <template>
@@ -15,6 +15,7 @@
 <script setup>
 import { getUser } from '@/api/system/user'
 import { onMounted } from '@vue/runtime-core'
+import AES from '@/utils/aes'
 
 onMounted(async () => {
   const res = await getUser()

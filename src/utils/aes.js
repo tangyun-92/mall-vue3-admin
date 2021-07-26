@@ -2,36 +2,39 @@
  * @Author: 唐云
  * @Date: 2021-07-26 17:16:25
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-26 17:25:42
+ * @Last Modified time: 2021-07-26 22:34:29
  * AES加密
  */
-import CryptoJS from 'crypto-js/crypto-js'
+import CryptoJS from 'crypto-js'
 
-//  KEY 和 iv 是后端给我的
-const aseKey = 'admin'
-const iv = '4490d2ded4f2d4ad'
-// 使用的是ECB模式
 export default {
-  Encrypt(data) {
-    var key = CryptoJS.enc.Utf8.parse(aseKey)
-    var ivs = CryptoJS.enc.Utf8.parse(iv)
-    var encrypted = CryptoJS.AES.encrypt(data, key, {
-      iv: ivs,
-      mode: CryptoJS.mode.ECB,
-      padding: CryptoJS.pad.Pkcs7
+  // 加密
+  encrypt(word, keyStr, ivStr) {
+    keyStr = keyStr || 'mallvue3admin666'
+    ivStr = ivStr || 'mallvue3admin888'
+    const key = CryptoJS.enc.Utf8.parse(keyStr)
+    const iv = CryptoJS.enc.Utf8.parse(ivStr)
+    const srcs = CryptoJS.enc.Utf8.parse(word)
+
+    const encrypted = CryptoJS.AES.encrypt(srcs, key, {
+      iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.ZeroPadding
     })
     return encrypted.toString()
   },
-  Decrypt(data) {
-    var key = CryptoJS.enc.Utf8.parse(aseKey)
-    var ivs = CryptoJS.enc.Utf8.parse(iv)
+  // 解密
+  decrypt(word, keyStr, ivStr) {
+    keyStr = keyStr || 'mallvue3admin666'
+    ivStr = ivStr || 'mallvue3admin888'
+    var key = CryptoJS.enc.Utf8.parse(keyStr)
+    const iv = CryptoJS.enc.Utf8.parse(ivStr)
 
-    var decrypt = CryptoJS.AES.decrypt(data, key, {
-      iv: ivs,
-      mode: CryptoJS.mode.ECB,
-      padding: CryptoJS.pad.Pkcs7
+    var decrypt = CryptoJS.AES.decrypt(word, key, {
+      iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.ZeroPadding
     })
-    var decryptedStr = decrypt.toString(CryptoJS.enc.Utf8)
-    return decryptedStr.toString()
+    return decrypt.toString(CryptoJS.enc.Utf8)
   }
 }
