@@ -31,6 +31,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
+import { login } from '@/api/public'
 
 const router = useRouter()
 const store = useStore()
@@ -41,8 +42,8 @@ const passwordLock = ref(true)
 const passwordType = ref('password')
 
 const param = reactive({
-  username: '',
-  password: ''
+  username: 'admin',
+  password: 'F8833383029D93ACBD66F6C8D81602DD'
 })
 
 const rules = reactive({
@@ -60,11 +61,14 @@ const switchPass = () => {
 }
 
 const submitForm = async () => {
-  loginFormRef.value.validate((valid) => {
+  loginFormRef.value.validate(async (valid) => {
     if (valid) {
       btnLoading.value = true
       // 访问登录接口
+      const res = await login(param)
+      store.commit('user/SET_TOKEN', res.data.token)
       router.push('/')
+      ElMessage.success(res.message)
     } else {
       ElMessage.error('请输入用户名和密码')
     }

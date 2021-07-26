@@ -4,7 +4,7 @@ window._BASE_CONFIG = {
   // 项目后台地址
   baseUrl: 'http://localhost:3003',
   // project key
-  projectKey: 'default',
+  projectKey: 'VUE_MALL_ADMIN',
   basePath: '/dist'
 }
 

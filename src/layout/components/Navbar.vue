@@ -52,9 +52,8 @@ const loginOut = () => {
     type: 'warning'
   })
     .then(() => {
-      store.dispatch('user/logout').then(() => {
-        router.push('/login')
-      })
+      localStorage.removeItem(window._BASE_CONFIG.projectKey)
+      router.push('/login')
     })
     .catch(() => {})
 }

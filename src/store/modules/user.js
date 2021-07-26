@@ -5,11 +5,12 @@ const state = {
 }
 
 const mutations = {
-
+  SET_TOKEN(state, data) {
+    state.token = data
+  }
 }
 
 const actions = {
-
 }
 
 export default {

@@ -1,4 +1,6 @@
 import axios from 'axios'
+import store from '@/store'
+import router from '@/router'
 import { ElMessage } from 'element-plus'
 
 const service = axios.create({
@@ -9,10 +11,10 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
-    const token = '123'
+    const token = store.state.user.token
     // 如果有token 就携带tokon
     if (token) {
-      config.headers['Authorization'] = 'Bearer__' + token
+      config.headers['Authorization'] = 'Bearer ' + token
     }
     return config
   },
@@ -21,10 +23,20 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    const res = response.data
+    if (!res.result) {
+      ElMessage({
+        type: 'error',
+        message: res.message
+      })
+    } else {
+      return res
+    }
+  },
   (error) => {
     if (error.response && error.response.status === 401) {
-      location.reload()
+      router.push('/login')
     }
     ElMessage({
       type: 'error',

@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
+import getters from './getters'
+import createPersistedState from 'vuex-persistedstate'
+import user from './modules/user'
 
-// Vite supports importing multiple modules from the file system using the special import.meta.glob function
-// see https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesFiles = import.meta.globEager('./modules/*.js')
 const pathList = []
 
@@ -17,7 +18,16 @@ const modules = pathList.reduce((modules, modulePath) => {
 }, {})
 
 const store = createStore({
-  modules
+  modules,
+  getters,
+  plugins: [createPersistedState({
+    key: window._BASE_CONFIG.projectKey,
+    reducer(state) {
+      return {
+        user: state.user
+      }
+    }
+  })]
 })
 
 export default store
