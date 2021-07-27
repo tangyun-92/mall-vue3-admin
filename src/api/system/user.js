@@ -7,8 +7,8 @@ import request from '@/utils/request'
  */
 export function getUser(data) {
   return request({
-    url: '/users',
-    method: 'get',
+    url: '/users/list',
+    method: 'post',
     data
   })
 }
@@ -20,7 +20,7 @@ export function getUser(data) {
  */
 export function createUser(data) {
   return request({
-    url: '/users/:id',
+    url: '/users/create',
     method: 'post',
     data
   })
@@ -33,8 +33,8 @@ export function createUser(data) {
  */
 export function updateUser(data) {
   return request({
-    url: '/users/:id',
-    method: 'patch',
+    url: '/users/update',
+    method: 'post',
     data
   })
 }
@@ -46,8 +46,8 @@ export function updateUser(data) {
  */
 export function delUser(data) {
   return request({
-    url: '/users/:id',
-    method: 'delete',
+    url: '/users/delete',
+    method: 'post',
     data
   })
 }

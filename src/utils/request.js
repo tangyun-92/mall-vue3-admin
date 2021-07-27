@@ -47,12 +47,13 @@ service.interceptors.response.use(
 )
 
 const request = (requestObj) => {
-  const { url, method, data, timeout } = requestObj
+  const { url, method, data, timeout, params } = requestObj
   return service({
     url,
     method: method || 'post',
     data,
-    timeout: timeout || 20000
+    timeout: timeout || 20000,
+    params
   })
 }
 

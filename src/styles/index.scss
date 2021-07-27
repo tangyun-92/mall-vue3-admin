@@ -1,3 +1,9 @@
+/*
+ * @Author: 唐云 
+ * @Date: 2021-07-27 10:54:41 
+ * @Last Modified by: 唐云
+ * @Last Modified time: 2021-07-27 11:30:27
+ */
 @import './variables.scss';
 @import './mixin.scss';
 @import './transition.scss';
@@ -53,4 +59,44 @@ div:focus {
 
 .w-full {
   width: 100%;
+}
+
+.search-container {
+  padding: 28px 10px 10px 10px;
+  border-radius: 5px;
+  background: #fff;
+  display: -webkit-box;
+
+  .el-form {
+    display: flex;
+    flex-wrap: wrap;
+
+    .el-input__inner {
+      width: 220px;
+    }
+  }
+
+  .search {
+    position: absolute;
+    right: 30px;
+  }
+}
+
+.table-container {
+  min-height: 640px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
+  margin: 15px 0 0 0;
+  padding: 10px 30px;
+
+  .opera-main {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0 0 0;
+  }
+
+  .table-main {
+    margin: 20px 0 0 0;
+  }
 }

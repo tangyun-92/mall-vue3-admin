@@ -23,9 +23,7 @@ export default defineComponent({
 
   /* 84 = navbar + tags-view = 50 +34 */
   height: calc(100vh - 114px);
-  margin: 12px;
-  border-radius: 5px;
-  background-color: #fff;
+  margin: 15px;
   overflow-x: hidden;
 }
 </style>
