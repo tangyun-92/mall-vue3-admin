@@ -92,6 +92,7 @@ const resizeHandler = () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background: #f4f4f4;
 
   &.mobile.openSidebar {
     position: fixed;
