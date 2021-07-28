@@ -51,3 +51,16 @@ export function changeStatus(data) {
     data
   })
 }
+
+/**
+ * 修改用户密码
+ * @param {*} data
+ * @returns
+ */
+export function changePassword(data) {
+  return request({
+    url: '/users/password',
+    method: 'post',
+    data
+  })
+}

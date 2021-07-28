@@ -12,7 +12,7 @@ export default function ({ formDataDefault, getTableList, page }) {
   const loading = ref(false)
 
   const selectIds = computed(() => {
-    return multipleSelection.value.map(item => item.id)
+    return multipleSelection.value.map((item) => item.id)
   })
 
   // 新增
@@ -44,12 +44,20 @@ export default function ({ formDataDefault, getTableList, page }) {
     multipleSelection.value = val
   }
 
+  /**
+   * 处理启用、停用、删除、清空等操作
+   * @param {*} operation 操作名
+   * @param {*} reqFn 请求方法名
+   * @param {*} data 传递给后端的数据
+   * @param {*} success 成功后执行的方法，默认为getTableList
+   * @param {*} single 是否操作的单条数据，默认为false
+   */
   const multipleSelectionHandler = ({
     operation,
     reqFn,
     data,
     success,
-    single
+    single = false
   }) => {
     if (multipleSelection.value.length === 0 && !single) {
       ElMessage.warning('请先选中数据')

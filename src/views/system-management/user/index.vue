@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-28 16:04:23
+ * @Last Modified time: 2021-07-28 16:49:42
  */
 
 <template>
@@ -106,7 +106,7 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
+          <el-table-column fixed="right" label="操作" width="160">
             <template #default="scope">
               <el-button
                 type="text"
@@ -116,6 +116,7 @@
               <el-button
                 type="text"
                 size="small"
+                :disabled="scope.row.status === 1"
                 @click="multipleSelectionHandler({
                   operation: '删除',
                   reqFn: delUser,
@@ -125,6 +126,11 @@
                   single: true
                 })"
               >删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handlePassword(scope.row.id)"
+              >修改密码</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -170,17 +176,57 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 修改密码 -->
+    <el-dialog
+      v-if="passwordVisible"
+      v-model="passwordVisible"
+      title="修改密码"
+      width="400px"
+    >
+      <div class="form-container">
+        <el-form
+          ref="passwordRef"
+          :model="passwordForm"
+          :rules="passwordRules"
+          class="form-data"
+          label-width="100px"
+          label-position="right"
+          size="small"
+        >
+          <el-form-item label="新密码" prop="password">
+            <el-input
+              v-model.trim="passwordForm.password"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="passwordVisible = false"
+          >取 消</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="updatePassword"
+          >确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUser, changeStatus, delUser } from '@/api/system/user'
+import { getUser, changeStatus, delUser, changePassword } from '@/api/system/user'
 import AES from '@/utils/aes'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import useOperaHooks from '@/hooks/useOperaHooks'
 import { ifEnable, ifEnableDict } from '@/constants/dictionary'
 import { defineComponent, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   components: {
@@ -188,8 +234,16 @@ export default defineComponent({
   },
   setup() {
     const formRef = ref(null)
-    // 复选框选中的数据
-    // const multipleSelection = ref([])
+    // 修改密码
+    const passwordVisible = ref(false)
+    const passwordId = ref(null)
+    const passwordRef = ref(null)
+    const passwordForm = reactive({
+      password: ''
+    })
+    const passwordRules = {
+      password: { required: true, message: '不能为空', trigger: 'blur' }
+    }
     // 搜索数据
     const searchData = reactive({
       username: '',
@@ -219,15 +273,29 @@ export default defineComponent({
       selectIds
     } = useOperaHooks({ formDataDefault, getTableList, page: data.page })
 
-    // const handleSelectionChange = (val) => {
-    //   console.log(this.multipleSelection = val)
-    // }
-
     // 新增/编辑表单提交
     const handleSubmit = () => {
       formRef.value.submit().then(() => {
         dialogData.formDialogVisible = false
         getTableList()
+      })
+    }
+
+    const handlePassword = (id) => {
+      passwordId.value = JSON.parse(JSON.stringify(id))
+      passwordVisible.value = true
+    }
+    // 修改密码
+    const updatePassword = () => {
+      passwordRef.value.validate(async valid => {
+        if (valid) {
+          const res = await changePassword({
+            id: passwordId.value,
+            password: AES.encrypt(passwordForm.password)
+          })
+          ElMessage.success(res.message)
+          passwordVisible.value = false
+        }
       })
     }
 
@@ -248,7 +316,13 @@ export default defineComponent({
       multipleSelectionHandler,
       changeStatus,
       selectIds,
-      delUser
+      delUser,
+      passwordVisible,
+      handlePassword,
+      updatePassword,
+      passwordForm,
+      passwordRef,
+      passwordRules
     }
   }
 })
