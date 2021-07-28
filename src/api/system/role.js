@@ -12,3 +12,30 @@ export function getRole(data) {
     data
   })
 }
+
+/**
+ * 创建/更新角色
+ * @param {*} data
+ * @returns
+ */
+export function createOrEditRole(data) {
+  return request({
+    url: '/roles/update',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 删除角色
+ * @param {*} data
+ * @returns
+ */
+export function delRole(data) {
+  return request({
+    url: '/roles/delete',
+    method: 'post',
+    data
+  })
+}
+

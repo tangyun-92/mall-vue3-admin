@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-28 16:49:42
+ * @Last Modified time: 2021-07-28 16:56:39
  */
 
 <template>
@@ -229,6 +229,7 @@ import Form from './components/Form.vue'
 import { ElMessage } from 'element-plus'
 
 export default defineComponent({
+  name: 'User',
   components: {
     Form
   },

@@ -55,6 +55,7 @@ import { getRole } from '@/api/system/role'
 import { ElMessage } from 'element-plus'
 
 export default defineComponent({
+  name: 'UserForm',
   props: {
     data: {
       type: Object,
