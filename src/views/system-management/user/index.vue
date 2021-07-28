@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-28 15:54:44
+ * @Last Modified time: 2021-07-28 16:04:23
  */
 
 <template>
@@ -67,6 +67,18 @@
             }
           })"
         >停用</el-button>
+        <el-button
+          type="danger"
+          size="small"
+          plain
+          @click="multipleSelectionHandler({
+            operation: '删除',
+            reqFn: delUser,
+            data: {
+              id: selectIds
+            }
+          })"
+        >删除</el-button>
       </div>
       <!-- 表格 -->
       <div class="table-main">
@@ -104,7 +116,14 @@
               <el-button
                 type="text"
                 size="small"
-                @click="handleDel"
+                @click="multipleSelectionHandler({
+                  operation: '删除',
+                  reqFn: delUser,
+                  data: {
+                    id: String(scope.row.id).split(' ')
+                  },
+                  single: true
+                })"
               >删除</el-button>
             </template>
           </el-table-column>
@@ -155,7 +174,7 @@
 </template>
 
 <script>
-import { getUser, changeStatus } from '@/api/system/user'
+import { getUser, changeStatus, delUser } from '@/api/system/user'
 import AES from '@/utils/aes'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import useOperaHooks from '@/hooks/useOperaHooks'
@@ -195,7 +214,6 @@ export default defineComponent({
       dialogData,
       handleCreate,
       handleUpdate,
-      handleDel,
       handleSelectionChange,
       multipleSelectionHandler,
       selectIds
@@ -221,7 +239,6 @@ export default defineComponent({
       getTableList,
       handleCreate,
       handleUpdate,
-      handleDel,
       dialogData,
       searchData,
       ifEnable,
@@ -230,7 +247,8 @@ export default defineComponent({
       handleSelectionChange,
       multipleSelectionHandler,
       changeStatus,
-      selectIds
+      selectIds,
+      delUser
     }
   }
 })
