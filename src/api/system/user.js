@@ -14,24 +14,11 @@ export function getUser(data) {
 }
 
 /**
- * 新增用户
+ * 创建/更新用户
  * @param {*} data
  * @returns
  */
-export function createUser(data) {
-  return request({
-    url: '/users/create',
-    method: 'post',
-    data
-  })
-}
-
-/**
- * 更新用户
- * @param {*} data
- * @returns
- */
-export function updateUser(data) {
+export function createOrEditUser(data) {
   return request({
     url: '/users/update',
     method: 'post',
