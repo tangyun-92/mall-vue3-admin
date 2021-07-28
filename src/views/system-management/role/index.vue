@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-28 17:15:09
+ * @Last Modified time: 2021-07-28 17:25:52
  */
 <template>
   <div class="home-view">
@@ -94,23 +94,23 @@
     </el-pagination>
     <!-- 新增/编辑用户 -->
     <el-dialog
-      v-if="dialogData.formDialogVisible"
-      v-model="dialogData.formDialogVisible"
-      :title="dialogData.dialogTitle"
+      v-if="operaData.formDialogVisible"
+      v-model="operaData.formDialogVisible"
+      :title="operaData.dialogTitle"
       width="400px"
     >
       <div class="form-container">
         <Form
           ref="formRef"
-          :status="dialogData.dialogStatus"
-          :data="dialogData.formData"
+          :status="operaData.dialogStatus"
+          :data="operaData.formData"
         ></Form>
       </div>
       <template #footer>
         <span class="dialog-footer">
           <el-button
             size="small"
-            @click="dialogData.formDialogVisible = false"
+            @click="operaData.formDialogVisible = false"
           >取 消</el-button>
           <el-button
             type="primary"
@@ -154,7 +154,7 @@ export default defineComponent({
       getTableList
     } = useBaseHooks({ reqFn: getRole, searchData })
     const {
-      dialogData,
+      operaData,
       handleCreate,
       handleUpdate,
       handleSelectionChange,
@@ -165,7 +165,7 @@ export default defineComponent({
     // 新增/编辑表单提交
     const handleSubmit = () => {
       formRef.value.submit().then(() => {
-        dialogData.formDialogVisible = false
+        operaData.formDialogVisible = false
         getTableList()
       })
     }
@@ -178,7 +178,7 @@ export default defineComponent({
       getTableList,
       handleCreate,
       handleUpdate,
-      dialogData,
+      operaData,
       searchData,
       handleSubmit,
       handleSelectionChange,

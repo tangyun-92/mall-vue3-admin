@@ -2,41 +2,43 @@ import { computed, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default function ({ formDataDefault, getTableList, page }) {
-  const dialogData = reactive({
+  const operaData = reactive({
     formDialogVisible: false,
     dialogStatus: '',
     dialogTitle: '',
     formData: {}
   })
+  // table复选框数据
   const multipleSelection = ref([])
   const loading = ref(false)
 
+  // 选中数据id组成的数组，传递给后端
   const selectIds = computed(() => {
     return multipleSelection.value.map((item) => item.id)
   })
 
   // 新增
   const handleCreate = () => {
-    dialogData.formDialogVisible = true
-    dialogData.dialogStatus = 'create'
-    dialogData.dialogTitle = '新增'
-    Object.assign(dialogData.formData, formDataDefault)
+    operaData.formDialogVisible = true
+    operaData.dialogStatus = 'create'
+    operaData.dialogTitle = '新增'
+    Object.assign(operaData.formData, formDataDefault)
   }
 
   // 编辑
   const handleUpdate = (row) => {
-    dialogData.formData = JSON.parse(JSON.stringify(row))
-    dialogData.formDialogVisible = true
-    dialogData.dialogStatus = 'edit'
-    dialogData.dialogTitle = '编辑'
+    operaData.formData = JSON.parse(JSON.stringify(row))
+    operaData.formDialogVisible = true
+    operaData.dialogStatus = 'edit'
+    operaData.dialogTitle = '编辑'
   }
 
   // 查看详情
   const handleDetails = (row) => {
-    dialogData.formData = JSON.parse(JSON.stringify(row))
-    dialogData.formDialogVisible = true
-    dialogData.dialogStatus = 'details'
-    dialogData.dialogTitle = '查看'
+    operaData.formData = JSON.parse(JSON.stringify(row))
+    operaData.formDialogVisible = true
+    operaData.dialogStatus = 'details'
+    operaData.dialogTitle = '查看'
   }
 
   // 表格复选框赋值
@@ -81,7 +83,7 @@ export default function ({ formDataDefault, getTableList, page }) {
   }
 
   return {
-    dialogData,
+    operaData,
     handleCreate,
     handleUpdate,
     handleDetails,

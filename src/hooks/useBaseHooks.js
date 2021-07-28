@@ -15,6 +15,10 @@ export default function ({ reqFn, searchData }) {
     loading: false
   })
 
+  onMounted(() => {
+    getTableList()
+  })
+
   /**
    * 获取table表格数据
    */
@@ -48,10 +52,6 @@ export default function ({ reqFn, searchData }) {
     data.currentPage = currentPage
     getTableList(currentPage)
   }
-
-  onMounted(() => {
-    getTableList()
-  })
 
   return {
     data,
