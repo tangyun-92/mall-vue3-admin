@@ -11,13 +11,15 @@ export default function ({ reqFn, searchData }) {
     tableData: [],
     total: 0,
     currentPage: 1,
-    pageSize: 10
+    pageSize: 10,
+    loading: false
   })
 
   /**
    * 获取table表格数据
    */
   const getTableList = async () => {
+    data.loading = true
     const res = await reqFn({
       page: data.currentPage,
       pageSize: data.pageSize,
@@ -26,6 +28,7 @@ export default function ({ reqFn, searchData }) {
     data.tableData = res.data.records
     data.total = res.data.total
     data.currentPage = res.data.page
+    data.loading = false
   }
 
   /**

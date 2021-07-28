@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-28 14:57:25
+ * @Last Modified time: 2021-07-28 15:54:44
  */
 
 <template>
@@ -41,12 +41,46 @@
           plain
           @click="handleCreate"
         >新增</el-button>
-        <el-button type="success" size="small" plain>启用</el-button>
-        <el-button type="danger" size="small" plain>停用</el-button>
+        <el-button
+          type="success"
+          size="small"
+          plain
+          @click="multipleSelectionHandler({
+            operation: '启用',
+            reqFn: changeStatus,
+            data: {
+              id: selectIds,
+              status: 1
+            }
+          })"
+        >启用</el-button>
+        <el-button
+          type="danger"
+          size="small"
+          plain
+          @click="multipleSelectionHandler({
+            operation: '停用',
+            reqFn: changeStatus,
+            data: {
+              id: selectIds,
+              status: 0
+            }
+          })"
+        >停用</el-button>
       </div>
       <!-- 表格 -->
       <div class="table-main">
-        <el-table :data="data.tableData" stripe style="width: 100%">
+        <el-table
+          :data="data.tableData"
+          stripe
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column
+            type="selection"
+            width="55"
+          >
+          </el-table-column>
           <el-table-column prop="username" label="用戶名"> </el-table-column>
           <el-table-column prop="employee" label="员工姓名"> </el-table-column>
           <el-table-column prop="role" label="所属角色"> </el-table-column>
@@ -77,6 +111,7 @@
         </el-table>
       </div>
     </div>
+    <!-- 分页 -->
     <el-pagination
       :current-page="data.currentPage"
       :page-sizes="[5, 10, 20, 40]"
@@ -88,6 +123,7 @@
       @current-change="handleCurrentChange"
     >
     </el-pagination>
+    <!-- 新增/编辑用户 -->
     <el-dialog
       v-if="dialogData.formDialogVisible"
       v-model="dialogData.formDialogVisible"
@@ -119,7 +155,7 @@
 </template>
 
 <script>
-import { getUser } from '@/api/system/user'
+import { getUser, changeStatus } from '@/api/system/user'
 import AES from '@/utils/aes'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import useOperaHooks from '@/hooks/useOperaHooks'
@@ -133,10 +169,14 @@ export default defineComponent({
   },
   setup() {
     const formRef = ref(null)
+    // 复选框选中的数据
+    // const multipleSelection = ref([])
+    // 搜索数据
     const searchData = reactive({
       username: '',
       status: ''
     })
+    // 默认表单数据
     const formDataDefault = reactive({
       username: '',
       status: '',
@@ -145,12 +185,27 @@ export default defineComponent({
       id: null
     })
 
-    const { data, handleSizeChange, handleCurrentChange, getTableList } =
-      useBaseHooks({ reqFn: getUser, searchData })
-    const { dialogData, handleCreate, handleUpdate, handleDel } = useOperaHooks(
-      { formDataDefault }
-    )
+    const {
+      data,
+      handleSizeChange,
+      handleCurrentChange,
+      getTableList
+    } = useBaseHooks({ reqFn: getUser, searchData })
+    const {
+      dialogData,
+      handleCreate,
+      handleUpdate,
+      handleDel,
+      handleSelectionChange,
+      multipleSelectionHandler,
+      selectIds
+    } = useOperaHooks({ formDataDefault, getTableList, page: data.page })
 
+    // const handleSelectionChange = (val) => {
+    //   console.log(this.multipleSelection = val)
+    // }
+
+    // 新增/编辑表单提交
     const handleSubmit = () => {
       formRef.value.submit().then(() => {
         dialogData.formDialogVisible = false
@@ -171,7 +226,11 @@ export default defineComponent({
       searchData,
       ifEnable,
       ifEnableDict,
-      handleSubmit
+      handleSubmit,
+      handleSelectionChange,
+      multipleSelectionHandler,
+      changeStatus,
+      selectIds
     }
   }
 })

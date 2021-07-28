@@ -46,8 +46,8 @@ export function delUser(data) {
  */
 export function changeStatus(data) {
   return request({
-    url: '/users/:id/status',
-    method: 'patch',
+    url: '/users/status',
+    method: 'post',
     data
   })
 }

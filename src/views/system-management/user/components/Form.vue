@@ -69,7 +69,9 @@ export default defineComponent({
   },
   setup(props) {
     const formRef = ref(null)
+    // 角色数据
     const roleData = ref('')
+    // 表单数据
     const formData = reactive({
       username: '',
       status: '',
@@ -77,6 +79,7 @@ export default defineComponent({
       emp_id: '',
       id: null
     })
+    // 校验规则
     const rules = {
       username: [{ required: true, message: '不能为空', trigger: 'blur' }],
       emp_id: [{ required: true, message: '不能为空', trigger: 'blur' }],
@@ -91,6 +94,7 @@ export default defineComponent({
       getRoleList()
     })
 
+    // 获取角色列表
     const getRoleList = async () => {
       const res = await getRole({
         page: 1,
@@ -99,6 +103,7 @@ export default defineComponent({
       roleData.value = res.data.records
     }
 
+    // 提交表单
     const submit = () => {
       return new Promise((resolve, resject) => {
         formRef.value.validate(async valid => {
