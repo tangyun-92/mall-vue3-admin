@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 11:09:50
+ * @Last Modified time: 2021-07-29 13:41:32
  用户管理
  */
 
@@ -72,7 +72,7 @@
               reqFn: changeStatus,
               data: {
                 id: selectIds,
-                status: 0
+                status: 2
               }
             })
           "
@@ -109,7 +109,7 @@
               <el-tag v-if="scope.row.status === 1" type="success">
                 {{ ifEnableDict[scope.row.status] }}
               </el-tag>
-              <el-tag v-if="scope.row.status === 0" type="danger">
+              <el-tag v-if="scope.row.status === 2" type="danger">
                 {{ ifEnableDict[scope.row.status] }}
               </el-tag>
             </template>
