@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 09:59:41
+ * @Last Modified time: 2021-07-29 10:53:46
  */
 
 <template>
@@ -11,10 +11,15 @@
     <div class="search-container">
       <el-form ref="form" :model="searchData" label-width="100px" size="small">
         <el-form-item label="用户名">
-          <el-input v-model="searchData.username" clearable></el-input>
+          <el-input
+            v-model="searchData.username"
+            clearable
+            placeholder="请输入"
+            @keydown.enter="getTableList"
+          ></el-input>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="searchData.status" placeholder="请选择" clearable>
+          <el-select v-model="searchData.status" placeholder="请选择" clearable @change="getTableList">
             <el-option
               v-for="item in ifEnable"
               :key="item.value"
@@ -45,39 +50,45 @@
           type="success"
           size="small"
           plain
-          @click="multipleSelectionHandler({
-            operation: '启用',
-            reqFn: changeStatus,
-            data: {
-              id: selectIds,
-              status: 1
-            }
-          })"
+          @click="
+            multipleSelectionHandler({
+              operation: '启用',
+              reqFn: changeStatus,
+              data: {
+                id: selectIds,
+                status: 1
+              }
+            })
+          "
         >启用</el-button>
         <el-button
           type="danger"
           size="small"
           plain
-          @click="multipleSelectionHandler({
-            operation: '停用',
-            reqFn: changeStatus,
-            data: {
-              id: selectIds,
-              status: 0
-            }
-          })"
+          @click="
+            multipleSelectionHandler({
+              operation: '停用',
+              reqFn: changeStatus,
+              data: {
+                id: selectIds,
+                status: 0
+              }
+            })
+          "
         >停用</el-button>
         <el-button
           type="danger"
           size="small"
           plain
-          @click="multipleSelectionHandler({
-            operation: '删除',
-            reqFn: delUser,
-            data: {
-              id: selectIds
-            }
-          })"
+          @click="
+            multipleSelectionHandler({
+              operation: '删除',
+              reqFn: delUser,
+              data: {
+                id: selectIds
+              }
+            })
+          "
         >删除</el-button>
       </div>
       <!-- 表格 -->
@@ -88,11 +99,7 @@
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column
-            type="selection"
-            width="55"
-          >
-          </el-table-column>
+          <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="username" label="用戶名"> </el-table-column>
           <el-table-column prop="employee" label="员工姓名"> </el-table-column>
           <el-table-column prop="role" label="所属角色"> </el-table-column>
@@ -117,14 +124,16 @@
                 type="text"
                 size="small"
                 :disabled="scope.row.status === 1"
-                @click="multipleSelectionHandler({
-                  operation: '删除',
-                  reqFn: delUser,
-                  data: {
-                    id: String(scope.row.id).split(' ')
-                  },
-                  single: true
-                })"
+                @click="
+                  multipleSelectionHandler({
+                    operation: '删除',
+                    reqFn: delUser,
+                    data: {
+                      id: String(scope.row.id).split(' ')
+                    },
+                    single: true
+                  })
+                "
               >删除</el-button>
               <el-button
                 type="text"
@@ -139,7 +148,7 @@
     <!-- 分页 -->
     <el-pagination
       :current-page="data.currentPage"
-      :page-sizes="[5, 10, 20, 40]"
+      :page-sizes="[10, 20, 40, 50, 100]"
       :page-size="data.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="data.total"
@@ -219,7 +228,12 @@
 </template>
 
 <script>
-import { getUser, changeStatus, delUser, changePassword } from '@/api/system/user'
+import {
+  getUser,
+  changeStatus,
+  delUser,
+  changePassword
+} from '@/api/system/user'
 import AES from '@/utils/aes'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { ifEnable, ifEnableDict } from '@/constants/dictionary'
@@ -284,7 +298,7 @@ export default defineComponent({
     }
     // 修改密码
     const updatePassword = () => {
-      passwordRef.value.validate(async valid => {
+      passwordRef.value.validate(async (valid) => {
         if (valid) {
           const res = await changePassword({
             id: passwordId.value,

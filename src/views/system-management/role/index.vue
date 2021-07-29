@@ -2,7 +2,8 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 10:00:05
+ * @Last Modified time: 2021-07-29 10:53:21
+ 角色管理
  */
 <template>
   <div class="home-view">
@@ -10,7 +11,12 @@
     <div class="search-container">
       <el-form ref="form" :model="searchData" label-width="100px" size="small">
         <el-form-item label="角色">
-          <el-input v-model="searchData.role" clearable></el-input>
+          <el-input
+            v-model="searchData.role"
+            clearable
+            placeholder="请输入"
+            @keydown.enter="getTableList"
+          ></el-input>
         </el-form-item>
       </el-form>
       <el-button
@@ -33,13 +39,15 @@
           type="danger"
           size="small"
           plain
-          @click="multipleSelectionHandler({
-            operation: '删除',
-            reqFn: delRole,
-            data: {
-              id: selectIds
-            }
-          })"
+          @click="
+            multipleSelectionHandler({
+              operation: '删除',
+              reqFn: delRole,
+              data: {
+                id: selectIds
+              }
+            })
+          "
         >删除</el-button>
       </div>
       <!-- 表格 -->
@@ -50,11 +58,7 @@
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column
-            type="selection"
-            width="55"
-          >
-          </el-table-column>
+          <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="role" label="角色名称"> </el-table-column>
           <el-table-column fixed="right" label="操作">
             <template #default="scope">
@@ -66,14 +70,16 @@
               <el-button
                 type="text"
                 size="small"
-                @click="multipleSelectionHandler({
-                  operation: '删除',
-                  reqFn: delRole,
-                  data: {
-                    id: String(scope.row.id).split(' ')
-                  },
-                  single: true
-                })"
+                @click="
+                  multipleSelectionHandler({
+                    operation: '删除',
+                    reqFn: delRole,
+                    data: {
+                      id: String(scope.row.id).split(' ')
+                    },
+                    single: true
+                  })
+                "
               >删除</el-button>
             </template>
           </el-table-column>
@@ -83,7 +89,7 @@
     <!-- 分页 -->
     <el-pagination
       :current-page="data.currentPage"
-      :page-sizes="[5, 10, 20, 40]"
+      :page-sizes="[10, 20, 40, 50, 100]"
       :page-size="data.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="data.total"
