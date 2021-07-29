@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-28 17:25:57
+ * @Last Modified time: 2021-07-29 09:59:41
  */
 
 <template>
@@ -150,23 +150,23 @@
     </el-pagination>
     <!-- 新增/编辑用户 -->
     <el-dialog
-      v-if="operaData.formDialogVisible"
-      v-model="operaData.formDialogVisible"
-      :title="operaData.dialogTitle"
+      v-if="data.formDialogVisible"
+      v-model="data.formDialogVisible"
+      :title="data.dialogTitle"
       width="400px"
     >
       <div class="form-container">
         <Form
           ref="formRef"
-          :status="operaData.dialogStatus"
-          :data="operaData.formData"
+          :status="data.dialogStatus"
+          :data="data.formData"
         ></Form>
       </div>
       <template #footer>
         <span class="dialog-footer">
           <el-button
             size="small"
-            @click="operaData.formDialogVisible = false"
+            @click="data.formDialogVisible = false"
           >取 消</el-button>
           <el-button
             type="primary"
@@ -222,7 +222,6 @@
 import { getUser, changeStatus, delUser, changePassword } from '@/api/system/user'
 import AES from '@/utils/aes'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import useOperaHooks from '@/hooks/useOperaHooks'
 import { ifEnable, ifEnableDict } from '@/constants/dictionary'
 import { defineComponent, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
@@ -263,21 +262,18 @@ export default defineComponent({
       data,
       handleSizeChange,
       handleCurrentChange,
-      getTableList
-    } = useBaseHooks({ reqFn: getUser, searchData })
-    const {
-      operaData,
+      getTableList,
       handleCreate,
       handleUpdate,
       handleSelectionChange,
       multipleSelectionHandler,
       selectIds
-    } = useOperaHooks({ formDataDefault, getTableList, page: data.page })
+    } = useBaseHooks({ reqFn: getUser, searchData, formDataDefault })
 
     // 新增/编辑表单提交
     const handleSubmit = () => {
       formRef.value.submit().then(() => {
-        operaData.formDialogVisible = false
+        data.formDialogVisible = false
         getTableList()
       })
     }
@@ -308,7 +304,6 @@ export default defineComponent({
       getTableList,
       handleCreate,
       handleUpdate,
-      operaData,
       searchData,
       ifEnable,
       ifEnableDict,
