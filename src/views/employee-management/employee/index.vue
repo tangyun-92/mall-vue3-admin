@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 16:43:49
+ * @Last Modified time: 2021-07-30 17:01:02
  员工管理
  */
 <template>
@@ -204,12 +204,6 @@ export default defineComponent({
       })
     }
 
-    // 过滤学历
-    const filterEducation = (id) => {
-      const data = education.find(item => item.value === id)
-      return data.label
-    }
-
     return {
       formRef,
       data,
@@ -223,8 +217,8 @@ export default defineComponent({
       handleSubmit,
       ifJobStatus,
       ifJobStatusDict,
-      filterEducation,
-      filterConstants
+      filterConstants,
+      education
     }
   }
 })

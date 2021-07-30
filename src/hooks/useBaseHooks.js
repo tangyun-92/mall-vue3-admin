@@ -129,6 +129,12 @@ export default function ({ reqFn, searchData, formDataDefault }) {
     }
   }
 
+  /**
+   * 根据传递的value过滤本地constants数据
+   * @param {*} param 需要过滤的参数
+   * @param {*} arr 需要比对的数组
+   * @returns 过滤后的数据
+   */
   const filterConstants = (param, arr) => {
     const res = arr.find(item => item.value === param)
     return res.label

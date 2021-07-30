@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-30 15:11:43
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 16:37:12
+ * @Last Modified time: 2021-07-30 17:02:10
  参数配置
  */
 <template>
@@ -38,18 +38,18 @@
       <el-table-column prop="name" label="参数名称"> </el-table-column>
       <el-table-column prop="numeric" label="是否为数字参数">
         <template #default="scope">
-          {{ filterWhether(scope.row.numeric) }}
+          {{ filterConstants(scope.row.numeric, whether) }}
         </template>
       </el-table-column>
       <el-table-column prop="unit" label="单位"> </el-table-column>
       <el-table-column prop="generic" label="是否为通用参数">
         <template #default="scope">
-          {{ filterWhether(scope.row.generic) }}
+          {{ filterConstants(scope.row.generic, whether) }}
         </template>
       </el-table-column>
       <el-table-column prop="searching" label="是否用于通用搜索">
         <template #default="scope">
-          {{ filterWhether(scope.row.searching) }}
+          {{ filterConstants(scope.row.searching, whether) }}
         </template>
       </el-table-column>
       <el-table-column prop="segements" label="参数值"></el-table-column>
@@ -160,13 +160,9 @@ export default defineComponent({
       handleSelectionChange,
       multipleSelectionHandler,
       handleCreate,
-      handleUpdate
+      handleUpdate,
+      filterConstants
     } = useBaseHooks({ reqFn: getCategoryParam, searchData, formDataDefault })
-
-    const filterWhether = (data) => {
-      const res = whether.find(item => item.value === data)
-      return res.label
-    }
 
     // 新增/编辑表单提交
     const handleSubmit = () => {
@@ -189,7 +185,8 @@ export default defineComponent({
       formRef,
       handleSubmit,
       searchData,
-      filterWhether
+      whether,
+      filterConstants
     }
   }
 })
