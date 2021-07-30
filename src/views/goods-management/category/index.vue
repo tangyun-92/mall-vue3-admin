@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 16:57:29
+ * @Last Modified time: 2021-07-30 16:01:47
  品类管理
  */
 <template>
@@ -82,6 +82,7 @@
                   })
                 "
               >删除</el-button>
+              <el-button type="text" size="small" @click="paramSetting(scope.row.spg_id)">参数配置</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -127,6 +128,23 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 参数配置 -->
+    <el-dialog
+      v-if="paramDialogVisible"
+      v-model="paramDialogVisible"
+      title="参数配置"
+      width="1200px"
+    >
+      <ParamTable :category-id="categoryId" />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="paramDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -135,14 +153,18 @@ import { getCategory, delCategory } from '@/api/goods/category'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { defineComponent, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
+import ParamTable from './components/ParamTable.vue'
 
 export default defineComponent({
   name: 'Category',
   components: {
-    Form
+    Form,
+    ParamTable
   },
   setup() {
     const formRef = ref(null)
+    const paramDialogVisible = ref(false)
+    const categoryId = ref(null) // 品类编号
     // 搜索数据
     const searchData = reactive({
       name: ''
@@ -174,6 +196,14 @@ export default defineComponent({
       })
     }
 
+    /**
+     * id 品类编号
+     */
+    const paramSetting = (id) => {
+      paramDialogVisible.value = true
+      categoryId.value = id
+    }
+
     return {
       formRef,
       data,
@@ -187,7 +217,10 @@ export default defineComponent({
       handleSelectionChange,
       delCategory,
       multipleSelectionHandler,
-      selectIds
+      selectIds,
+      paramSetting,
+      paramDialogVisible,
+      categoryId
     }
   }
 })

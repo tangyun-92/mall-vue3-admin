@@ -2,8 +2,8 @@
  * @Author: 唐云
  * @Date: 2021-07-29 11:10:10
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 13:42:47
- * 品牌管理
+ * @Last Modified time: 2021-07-30 13:45:47
+ * 商品分类管理
  */
 import request from '@/utils/request'
 
@@ -12,9 +12,9 @@ import request from '@/utils/request'
  * @param {*} data
  * @returns
  */
-export function getBrand(data) {
+export function getCategory(data) {
   return request({
-    url: '/brands/list',
+    url: '/categorys/list',
     method: 'post',
     data
   })
@@ -25,9 +25,9 @@ export function getBrand(data) {
  * @param {*} data
  * @returns
  */
-export function createOrEditBrand(data) {
+export function createOrEditCategory(data) {
   return request({
-    url: '/brands/update',
+    url: '/categorys/update',
     method: 'post',
     data
   })
@@ -38,9 +38,9 @@ export function createOrEditBrand(data) {
  * @param {*} data
  * @returns
  */
-export function delBrand(data) {
+export function delCategory(data) {
   return request({
-    url: '/brands/delete',
+    url: '/categorys/delete',
     method: 'post',
     data
   })

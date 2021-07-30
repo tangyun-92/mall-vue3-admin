@@ -37,3 +37,8 @@ export const education = [
   { label: '博士', value: 4 },
   { label: '其他', value: 5 }
 ]
+
+export const whether = [
+  { label: '是', value: 1 },
+  { label: '否', value: 0 }
+]

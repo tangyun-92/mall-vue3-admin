@@ -129,6 +129,11 @@ export default function ({ reqFn, searchData, formDataDefault }) {
     }
   }
 
+  const filterConstants = (param, arr) => {
+    const res = arr.find(item => item.value === param)
+    return res.label
+  }
+
   return {
     data,
     handleSizeChange,
@@ -139,6 +144,7 @@ export default function ({ reqFn, searchData, formDataDefault }) {
     handleDetails,
     handleSelectionChange,
     multipleSelectionHandler,
-    selectIds
+    selectIds,
+    filterConstants
   }
 }

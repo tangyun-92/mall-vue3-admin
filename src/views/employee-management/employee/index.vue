@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 15:42:06
+ * @Last Modified time: 2021-07-30 16:43:49
  员工管理
  */
 <template>
@@ -69,7 +69,7 @@
           <el-table-column prop="department" label="部门"> </el-table-column>
           <el-table-column prop="education" label="学历">
             <template #default="scope">
-              {{ filterEducation(scope.row.education) }}
+              {{ filterConstants(scope.row.education, education) }}
             </template>
           </el-table-column>
           <el-table-column prop="tel" label="联系方式"> </el-table-column>
@@ -192,7 +192,8 @@ export default defineComponent({
       getTableList,
       handleCreate,
       handleUpdate,
-      handleDetails
+      handleDetails,
+      filterConstants
     } = useBaseHooks({ reqFn: getEmployee, searchData, formDataDefault })
 
     // 新增/编辑表单提交
@@ -222,7 +223,8 @@ export default defineComponent({
       handleSubmit,
       ifJobStatus,
       ifJobStatusDict,
-      filterEducation
+      filterEducation,
+      filterConstants
     }
   }
 })
