@@ -56,20 +56,8 @@ export const constantRoutes = [
         name: 'GoodsManagement',
         component: () => import('@/views/goods-management/index.vue'),
         meta: { title: '商品管理', icon: 'el-icon-position' },
-        redirect: '/goods-management/category',
+        redirect: '/goods-management/brand',
         children: [
-          {
-            path: '/goods-management/category',
-            component: () => import('@/views/goods-management/category/index.vue'),
-            name: 'Category',
-            meta: { title: '品类管理', icon: 'el-icon-position' }
-          },
-          {
-            path: '/goods-management/parameter',
-            component: () => import('@/views/goods-management/parameter/index.vue'),
-            name: 'Parameter',
-            meta: { title: '参数管理', icon: 'el-icon-position' }
-          },
           {
             path: '/goods-management/brand',
             component: () => import('@/views/goods-management/brand/index.vue'),
@@ -77,14 +65,29 @@ export const constantRoutes = [
             meta: { title: '品牌管理', icon: 'el-icon-position' }
           },
           {
+            path: '/goods-management/category',
+            component: () =>
+              import('@/views/goods-management/category/index.vue'),
+            name: 'Category',
+            meta: { title: '品类管理', icon: 'el-icon-position' }
+          },
+          // {
+          //   path: '/goods-management/parameter',
+          //   component: () => import('@/views/goods-management/parameter/index.vue'),
+          //   name: 'Parameter',
+          //   meta: { title: '参数管理', icon: 'el-icon-position' }
+          // },
+          {
             path: '/goods-management/goods-category',
-            component: () => import('@/views/goods-management/goods-category/index.vue'),
+            component: () =>
+              import('@/views/goods-management/goods-category/index.vue'),
             name: 'GoodsCategory',
             meta: { title: '商品分类管理', icon: 'el-icon-position' }
           },
           {
             path: '/goods-management/product',
-            component: () => import('@/views/goods-management/product/index.vue'),
+            component: () =>
+              import('@/views/goods-management/product/index.vue'),
             name: 'Product',
             meta: { title: '产品管理', icon: 'el-icon-position' }
           },
@@ -105,25 +108,29 @@ export const constantRoutes = [
         children: [
           {
             path: '/after-sale-management/order',
-            component: () => import('@/views/after-sale-management/order/index.vue'),
+            component: () =>
+              import('@/views/after-sale-management/order/index.vue'),
             name: 'Order',
             meta: { title: '订单管理', icon: 'el-icon-position' }
           },
           {
             path: '/after-sale-management/expressage',
-            component: () => import('@/views/after-sale-management/expressage/index.vue'),
+            component: () =>
+              import('@/views/after-sale-management/expressage/index.vue'),
             name: 'Expressage',
             meta: { title: '快递管理', icon: 'el-icon-position' }
           },
           {
             path: '/after-sale-management/sales-return',
-            component: () => import('@/views/after-sale-management/sales-return/index.vue'),
+            component: () =>
+              import('@/views/after-sale-management/sales-return/index.vue'),
             name: 'SalesReturn',
             meta: { title: '退货管理', icon: 'el-icon-position' }
           },
           {
             path: '/after-sale-management/evaluate',
-            component: () => import('@/views/after-sale-management/evaluate/index.vue'),
+            component: () =>
+              import('@/views/after-sale-management/evaluate/index.vue'),
             name: 'Evaluate',
             meta: { title: '评价管理', icon: 'el-icon-position' }
           }
@@ -138,19 +145,22 @@ export const constantRoutes = [
         children: [
           {
             path: '/employee-management/department',
-            component: () => import('@/views/employee-management/department/index.vue'),
+            component: () =>
+              import('@/views/employee-management/department/index.vue'),
             name: 'Department',
             meta: { title: '部门管理', icon: 'el-icon-position' }
           },
           {
             path: '/employee-management/job',
-            component: () => import('@/views/employee-management/job/index.vue'),
+            component: () =>
+              import('@/views/employee-management/job/index.vue'),
             name: 'Job',
             meta: { title: '职位管理', icon: 'el-icon-position' }
           },
           {
             path: '/employee-management/employee',
-            component: () => import('@/views/employee-management/employee/index.vue'),
+            component: () =>
+              import('@/views/employee-management/employee/index.vue'),
             name: 'Employee',
             meta: { title: '员工管理', icon: 'el-icon-position' }
           }
@@ -165,13 +175,15 @@ export const constantRoutes = [
         children: [
           {
             path: '/client-management/member',
-            component: () => import('@/views/client-management/member/index.vue'),
+            component: () =>
+              import('@/views/client-management/member/index.vue'),
             name: 'Member',
             meta: { title: '会员等级管理', icon: 'el-icon-position' }
           },
           {
             path: '/client-management/customer',
-            component: () => import('@/views/client-management/customer/index.vue'),
+            component: () =>
+              import('@/views/client-management/customer/index.vue'),
             name: 'Customer',
             meta: { title: '客户管理', icon: 'el-icon-position' }
           }
@@ -186,31 +198,36 @@ export const constantRoutes = [
         children: [
           {
             path: '/invoice-management/warehouse',
-            component: () => import('@/views/invoice-management/warehouse/index.vue'),
+            component: () =>
+              import('@/views/invoice-management/warehouse/index.vue'),
             name: 'Warehouse',
             meta: { title: '仓库管理', icon: 'el-icon-position' }
           },
           {
             path: '/invoice-management/retail',
-            component: () => import('@/views/invoice-management/retail/index.vue'),
+            component: () =>
+              import('@/views/invoice-management/retail/index.vue'),
             name: 'Retail',
             meta: { title: '零售店管理', icon: 'el-icon-position' }
           },
           {
             path: '/invoice-management/supplier',
-            component: () => import('@/views/invoice-management/supplier/index.vue'),
+            component: () =>
+              import('@/views/invoice-management/supplier/index.vue'),
             name: 'Supplier',
             meta: { title: '供货商管理', icon: 'el-icon-position' }
           },
           {
             path: '/invoice-management/purchase',
-            component: () => import('@/views/invoice-management/purchase/index.vue'),
+            component: () =>
+              import('@/views/invoice-management/purchase/index.vue'),
             name: 'Purchase',
             meta: { title: '采购管理', icon: 'el-icon-position' }
           },
           {
             path: '/invoice-management/in-storage',
-            component: () => import('@/views/invoice-management/in-storage/index.vue'),
+            component: () =>
+              import('@/views/invoice-management/in-storage/index.vue'),
             name: 'InStorage',
             meta: { title: '入库信息管理', icon: 'el-icon-position' }
           }
