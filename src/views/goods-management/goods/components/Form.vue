@@ -48,24 +48,6 @@
         </el-col>
       </el-row>
       <el-row>
-        <!-- <el-col :span="12">
-          <el-form-item label="品类" prop="spg_id">
-            <el-select
-              v-model="formData.spg_id"
-              placeholder="请选择"
-              clearable
-              filterable
-            >
-              <el-option
-                v-for="item in category"
-                :key="item.spg_id"
-                :label="item.name"
-                :value="item.spg_id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col> -->
         <el-col :span="12">
           <el-form-item label="是否上架" prop="saleable">
             <el-select
@@ -97,13 +79,21 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <div class="dynamic-item">
+        <el-form-item v-for="item in paramList" :key="item.id" :label="item.name">
+          <el-input
+            v-model.trim="paramData[item.name]"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref } from '@vue/runtime-core'
-import { createOrEditGood } from '@/api/goods/good'
+import { computed, defineComponent, onMounted, reactive, ref } from '@vue/runtime-core'
+import { createOrEditGood, getGoodParam } from '@/api/goods/good'
 import { ElMessage } from 'element-plus'
 import { whether } from '@/constants/dictionary'
 import { getProduct } from '@/api/goods/product'
@@ -112,6 +102,12 @@ export default defineComponent({
   name: 'UserForm',
   props: {
     data: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    param: {
       type: Object,
       default() {
         return {}
@@ -145,14 +141,18 @@ export default defineComponent({
     }
     // 品牌数据
     const product = ref([])
+    const paramList = ref([])
+
+    const paramData = computed(() => props.param)
 
     onMounted(() => {
       Object.keys(formData).forEach((key) => {
         formData[key] = props.data[key]
       })
       getProductList()
+      getGoodParamList(props.data.spu_id)
     })
-    // 产品列表
+    // 获取产品列表
     const getProductList = async () => {
       const res = await getProduct({
         page: 1,
@@ -160,9 +160,10 @@ export default defineComponent({
       })
       product.value = res.data.records
     }
-
-    const changeCascader = (val) => {
-      console.log(val)
+    // 获取商品参数列表
+    const getGoodParamList = async (spu_id) => {
+      const res = await getGoodParam(spu_id)
+      paramList.value = res.data
     }
 
     // 提交表单
@@ -172,6 +173,7 @@ export default defineComponent({
           if (valid) {
             const res = await createOrEditGood({
               ...formData,
+              param: paramData.value,
               price: Number(formData.price)
             })
             ElMessage.success(res.message)
@@ -190,11 +192,21 @@ export default defineComponent({
       formRef,
       whether,
       product,
-      changeCascader
+      paramList,
+      paramData
     }
   }
 })
 </script>
 
 <style lang='scss' scoped>
+.dynamic-item {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .el-input {
+    width: 280px;
+  }
+}
 </style>

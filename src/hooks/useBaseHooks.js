@@ -17,7 +17,8 @@ export default function ({ reqFn, searchData, formDataDefault }) {
     formDialogVisible: false,
     dialogStatus: '',
     dialogTitle: '',
-    formData: {}
+    formData: {},
+    param: {}
   })
   const multipleSelection = ref([])
 
@@ -69,12 +70,16 @@ export default function ({ reqFn, searchData, formDataDefault }) {
     data.formDialogVisible = true
     data.dialogStatus = 'create'
     data.dialogTitle = '新增'
+    data.param = {}
     Object.assign(data.formData, formDataDefault)
   }
 
   // 编辑
   const handleUpdate = (row) => {
     data.formData = JSON.parse(JSON.stringify(row))
+    if (row.param) {
+      data.param = JSON.parse(JSON.stringify(row.param))
+    }
     data.formDialogVisible = true
     data.dialogStatus = 'edit'
     data.dialogTitle = '编辑'

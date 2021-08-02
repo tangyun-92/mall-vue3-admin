@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-02 17:32:15
+ * @Last Modified time: 2021-08-02 22:23:41
  商品管理
  */
 <template>
@@ -134,6 +134,7 @@
           ref="formRef"
           :status="data.dialogStatus"
           :data="data.formData"
+          :param="data.param"
         ></Form>
       </div>
       <template #footer>
