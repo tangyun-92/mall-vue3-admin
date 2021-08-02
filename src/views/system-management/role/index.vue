@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 10:53:21
+ * @Last Modified time: 2021-08-02 10:36:10
  角色管理
  */
 <template>
@@ -59,6 +59,7 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="role" label="角色名称"> </el-table-column>
           <el-table-column fixed="right" label="操作">
             <template #default="scope">

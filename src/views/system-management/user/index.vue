@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-29 13:41:32
+ * @Last Modified time: 2021-08-02 10:35:57
  用户管理
  */
 
@@ -101,6 +101,7 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="username" label="用戶名"> </el-table-column>
           <el-table-column prop="employee" label="员工姓名"> </el-table-column>
           <el-table-column prop="role" label="所属角色"> </el-table-column>

@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 17:01:02
+ * @Last Modified time: 2021-08-02 10:35:29
  员工管理
  */
 <template>
@@ -62,6 +62,7 @@
           stripe
           style="width: 100%"
         >
+          <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="ename" label="姓名"> </el-table-column>
           <el-table-column prop="wid" label="工号"> </el-table-column>
           <el-table-column prop="sex" label="性别"> </el-table-column>

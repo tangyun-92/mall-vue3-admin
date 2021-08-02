@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 13:18:10
+ * @Last Modified time: 2021-08-02 10:33:14
  品牌管理
  */
 <template>
@@ -59,6 +59,7 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="name" label="品牌名称"> </el-table-column>
           <el-table-column prop="image" label="品牌logo">
             <template #default="scope">

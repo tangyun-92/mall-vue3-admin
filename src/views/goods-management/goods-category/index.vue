@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 14:49:11
+ * @Last Modified time: 2021-08-02 14:00:42
  商品分类管理
  */
 <template>
@@ -123,7 +123,7 @@
 </template>
 
 <script>
-import { getCategory, delCategory } from '@/api/goods/goods-category'
+import { getGoodsCategory, delCategory } from '@/api/goods/goods-category'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { defineComponent, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
@@ -156,7 +156,7 @@ export default defineComponent({
       handleSelectionChange,
       multipleSelectionHandler,
       selectIds
-    } = useBaseHooks({ reqFn: getCategory, searchData, formDataDefault })
+    } = useBaseHooks({ reqFn: getGoodsCategory, searchData, formDataDefault })
 
     // 新增/编辑表单提交
     const handleSubmit = () => {
