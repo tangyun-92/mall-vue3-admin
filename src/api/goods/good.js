@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-02 11:17:28
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-02 21:43:15
+ * @Last Modified time: 2021-08-03 10:25:41
  * 商品
  */
 import request from '@/utils/request'
@@ -54,6 +54,19 @@ export function createOrEditGood(data) {
 export function delGood(data) {
   return request({
     url: '/goods/delete',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 上传图片
+ * @param {*} data
+ * @returns
+ */
+export function uploadImage(data) {
+  return request({
+    url: '/goods/upload',
     method: 'post',
     data
   })

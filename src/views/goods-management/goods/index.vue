@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-02 22:23:41
+ * @Last Modified time: 2021-08-03 14:58:07
  商品管理
  */
 <template>
@@ -18,17 +18,23 @@
             @keydown.enter="getTableList"
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="是否上架">
-          <el-select v-model="searchData.saleable" placeholder="请选择" clearable @change="getTableList">
+        <el-form-item label="产品" prop="spu_id">
+          <el-select
+            v-model="searchData.spu_id"
+            placeholder="请选择"
+            clearable
+            filterable
+            @change="getTableList"
+          >
             <el-option
-              v-for="item in whether"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in product"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
             >
             </el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
       <el-button
         type="success"
@@ -71,6 +77,7 @@
         >
           <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="id" label="id" width="88"> </el-table-column>
+          <el-table-column prop="product_name" label="所属产品" width="220"> </el-table-column>
           <el-table-column prop="title" label="标题"> </el-table-column>
           <el-table-column prop="saleable" label="是否上架" width="100">
             <template #default="scope">
@@ -82,7 +89,7 @@
               {{ filterConstants(scope.row.valid, whether) }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="220">
+          <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
               <el-button
                 type="text"
@@ -103,8 +110,6 @@
                   })
                 "
               >删除</el-button>
-              <el-button type="text" size="small">参数配置</el-button>
-              <el-button type="text" size="small">图片配置</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -135,6 +140,7 @@
           :status="data.dialogStatus"
           :data="data.formData"
           :param="data.param"
+          :product="product"
         ></Form>
       </div>
       <template #footer>
@@ -157,9 +163,10 @@
 <script>
 import { getGood, delGood } from '@/api/goods/good'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
 import { whether } from '@/constants/dictionary'
+import { getProduct } from '@/api/goods/product'
 
 export default defineComponent({
   name: 'User',
@@ -168,9 +175,11 @@ export default defineComponent({
   },
   setup() {
     const formRef = ref(null)
+    const product = ref([])
     // 搜索数据
     const searchData = reactive({
-      title: ''
+      title: '',
+      spu_id: ''
     })
     // 默认表单数据
     const formDataDefault = reactive({
@@ -197,6 +206,19 @@ export default defineComponent({
       filterConstants
     } = useBaseHooks({ reqFn: getGood, searchData, formDataDefault })
 
+    onMounted(() => {
+      getProductList()
+    })
+
+    // 获取产品列表
+    const getProductList = async () => {
+      const res = await getProduct({
+        page: 1,
+        pageSize: 5000
+      })
+      product.value = res.data.records
+    }
+
     // 新增/编辑表单提交
     const handleSubmit = () => {
       formRef.value.submit().then(() => {
@@ -220,7 +242,8 @@ export default defineComponent({
       multipleSelectionHandler,
       selectIds,
       whether,
-      filterConstants
+      filterConstants,
+      product
     }
   }
 })

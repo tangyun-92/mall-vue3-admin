@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 13:14:18
+ * @Last Modified time: 2021-08-03 10:37:40
  */
 <template>
   <div>
@@ -49,7 +49,6 @@
 import { computed, defineComponent, onMounted, reactive, ref } from '@vue/runtime-core'
 import { createOrEditBrand } from '@/api/goods/brand'
 import { ElMessage } from 'element-plus'
-import { useStore } from 'vuex'
 import useUploadHooks from '@/hooks/useUploadHooks'
 
 export default defineComponent({
@@ -68,7 +67,6 @@ export default defineComponent({
   },
   setup(props) {
     const uploadUrl = window._BASE_CONFIG.baseUrl + '/brands/upload'
-    const store = useStore()
     const formRef = ref(null)
     // 表单数据
     const formData = reactive({
@@ -83,9 +81,7 @@ export default defineComponent({
       name: [{ required: true, message: '不能为空', trigger: 'blur' }]
     }
 
-    const token = computed(() => store.state.user.token)
-
-    const { uploadSuccess, beforeUpload, uploadData } = useUploadHooks()
+    const { token, uploadSuccess, beforeUpload, uploadData } = useUploadHooks({})
 
     onMounted(() => {
       Object.keys(formData).forEach(key => {

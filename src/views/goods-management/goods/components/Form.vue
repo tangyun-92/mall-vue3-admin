@@ -79,6 +79,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <!-- 自定义参数 -->
       <div class="dynamic-item">
         <el-form-item v-for="item in paramList" :key="item.id" :label="item.name">
           <el-input
@@ -87,16 +88,42 @@
           ></el-input>
         </el-form-item>
       </div>
+      <!-- 图片上传 -->
+      <div class="img-upload">
+        <el-form-item label="商品图片" prop="image">
+          <el-upload
+            ref="upload"
+            class="avatar-uploader"
+            action="#"
+            list-type="picture-card"
+            :on-change="uploadChange"
+            :on-remove="uploadRemove"
+            :on-success="uploadSuccess"
+            :before-upload="beforeUpload"
+            :headers="{ Authorization: 'Bearer ' + token }"
+            :limit="6"
+            :multiple="true"
+            :on-exceed="uploadExceed"
+            :file-list="fileList"
+            :auto-upload="false"
+            :show-file-list="true"
+          >
+            <!-- <img v-if="uploadData.imageUrl" :src="uploadData.imageUrl" class="avatar"> -->
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+        </el-form-item>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
 import { computed, defineComponent, onMounted, reactive, ref } from '@vue/runtime-core'
-import { createOrEditGood, getGoodParam } from '@/api/goods/good'
+import { createOrEditGood, getGoodParam, uploadImage } from '@/api/goods/good'
 import { ElMessage } from 'element-plus'
 import { whether } from '@/constants/dictionary'
-import { getProduct } from '@/api/goods/product'
+import useUploadHooks from '@/hooks/useUploadHooks'
 
 export default defineComponent({
   name: 'UserForm',
@@ -105,6 +132,12 @@ export default defineComponent({
       type: Object,
       default() {
         return {}
+      }
+    },
+    product: {
+      type: Array,
+      default() {
+        return []
       }
     },
     param: {
@@ -140,8 +173,9 @@ export default defineComponent({
       valid: [{ required: true, message: '不能为空', trigger: 'change' }]
     }
     // 品牌数据
-    const product = ref([])
     const paramList = ref([])
+
+    var { token, uploadChange, uploadRemove, uploadSuccess, beforeUpload, uploadExceed, fileList, uploadData, submitUpload, upload } = useUploadHooks({ reqFn: uploadImage })
 
     const paramData = computed(() => props.param)
 
@@ -149,17 +183,11 @@ export default defineComponent({
       Object.keys(formData).forEach((key) => {
         formData[key] = props.data[key]
       })
-      getProductList()
+      if (props.data.images) {
+        fileList.value = props.data.images
+      }
       getGoodParamList(props.data.spu_id)
     })
-    // 获取产品列表
-    const getProductList = async () => {
-      const res = await getProduct({
-        page: 1,
-        pageSize: 5000
-      })
-      product.value = res.data.records
-    }
     // 获取商品参数列表
     const getGoodParamList = async (spu_id) => {
       const res = await getGoodParam(spu_id)
@@ -171,10 +199,12 @@ export default defineComponent({
       return new Promise((resolve, resject) => {
         formRef.value.validate(async (valid) => {
           if (valid) {
+            console.log(fileList)
             const res = await createOrEditGood({
               ...formData,
               param: paramData.value,
-              price: Number(formData.price)
+              price: Number(formData.price),
+              images: fileList.value
             })
             ElMessage.success(res.message)
             resolve(res)
@@ -191,9 +221,18 @@ export default defineComponent({
       formData,
       formRef,
       whether,
-      product,
       paramList,
-      paramData
+      paramData,
+      token,
+      uploadSuccess,
+      beforeUpload,
+      uploadData,
+      uploadExceed,
+      fileList,
+      submitUpload,
+      upload,
+      uploadChange,
+      uploadRemove
     }
   }
 })
