@@ -111,7 +111,7 @@
             <!-- <img v-if="uploadData.imageUrl" :src="uploadData.imageUrl" class="avatar"> -->
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+          <el-button class="upload-to" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -247,5 +247,15 @@ export default defineComponent({
   .el-input {
     width: 280px;
   }
+}
+
+.avatar-uploader-icon {
+  width: 148px;
+  height: 148px;
+  line-height: 148px;
+}
+
+.upload-to {
+  margin: 20px 0 0 0;
 }
 </style>
