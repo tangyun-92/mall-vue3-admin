@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-04 11:27:50
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-05 15:43:24
+ * @Last Modified time: 2021-08-05 16:25:02
  * 仓库管理
  */
 import request from '@/utils/request'
@@ -15,6 +15,19 @@ import request from '@/utils/request'
 export function getWarehouse(data) {
   return request({
     url: '/warehouses/list',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取仓库中商品列表
+ * @param {*} data
+ * @returns
+ */
+export function findShop(data) {
+  return request({
+    url: '/warehouses/findShop',
     method: 'post',
     data
   })

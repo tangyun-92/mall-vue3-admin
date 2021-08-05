@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-05 15:43:17
+ * @Last Modified time: 2021-08-05 16:48:49
  仓库管理
  */
 <template>
@@ -91,6 +91,11 @@
                   })
                 "
               >删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="shopSetting(scope.row.id)"
+              >商品库存</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -137,6 +142,23 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 商品库存 -->
+    <el-dialog
+      v-if="shopDialogVisible"
+      v-model="shopDialogVisible"
+      title="商品库存"
+      width="1200px"
+    >
+      <ShopTable :warehouse-id="warehouseId" />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="shopDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -145,11 +167,13 @@ import { getWarehouse, delWarehouse, getCascader } from '@/api/invoice-managemen
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
+import ShopTable from './components/ShopTable.vue'
 
 export default defineComponent({
   name: 'Warehouse',
   components: {
-    Form
+    Form,
+    ShopTable
   },
   setup() {
     const formRef = ref(null)
@@ -173,6 +197,9 @@ export default defineComponent({
       checkStrictly: false,
       emitPath: false
     })
+    // 商品列表弹窗
+    const shopDialogVisible = ref(false)
+    const warehouseId = ref(null)
 
     const {
       data,
@@ -209,6 +236,11 @@ export default defineComponent({
       })
     }
 
+    const shopSetting = (warehouse_id) => {
+      shopDialogVisible.value = true
+      warehouseId.value = warehouse_id
+    }
+
     return {
       formRef,
       data,
@@ -225,7 +257,10 @@ export default defineComponent({
       selectIds,
       filterProvince,
       cascaderData,
-      cascaderProps
+      cascaderProps,
+      shopSetting,
+      warehouseId,
+      shopDialogVisible
     }
   }
 })
