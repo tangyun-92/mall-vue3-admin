@@ -35,7 +35,6 @@
               :options="goodCategory"
               :props="cascaderProps"
               filterable
-              @change="changeCascader"
             ></el-cascader>
           </el-form-item>
         </el-col>
@@ -164,7 +163,7 @@ export default defineComponent({
     const cascaderProps = ref({
       label: 'name',
       value: 'id',
-      checkStrictly: true,
+      checkStrictly: false,
       emitPath: false
     })
     // 品牌数据
@@ -203,10 +202,6 @@ export default defineComponent({
       category.value = res.data.records
     }
 
-    const changeCascader = (val) => {
-      console.log(val)
-    }
-
     // 提交表单
     const submit = () => {
       return new Promise((resolve, resject) => {
@@ -231,8 +226,7 @@ export default defineComponent({
       goodCategory,
       cascaderProps,
       brand,
-      category,
-      changeCascader
+      category
     }
   }
 })
