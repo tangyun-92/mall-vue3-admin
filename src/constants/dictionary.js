@@ -25,11 +25,13 @@ export const sex = [
   { label: '女', value: '女' }
 ]
 
+// 婚姻状态
 export const ifMarried = [
   { label: '已婚', value: 1 },
   { label: '未婚', value: 2 }
 ]
 
+// 学历
 export const education = [
   { label: '大专', value: 1 },
   { label: '本科', value: 2 },
@@ -41,4 +43,11 @@ export const education = [
 export const whether = [
   { label: '是', value: 1 },
   { label: '否', value: 0 }
+]
+
+// 供货商类型
+export const supplierType = [
+  { label: '厂家', value: 1 },
+  { label: '代理商', value: 2 },
+  { label: '个人', value: 3 }
 ]

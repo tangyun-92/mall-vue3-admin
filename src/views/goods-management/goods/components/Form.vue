@@ -13,7 +13,7 @@
         <el-col :span="24">
           <el-form-item label="标题" prop="title">
             <el-input
-              v-model.trim="formData.title"
+              v-model="formData.title"
               placeholder="请输入"
             ></el-input>
           </el-form-item>
