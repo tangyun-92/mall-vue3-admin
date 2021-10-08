@@ -2,6 +2,7 @@ import { configure, start, done } from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 
 import router from './router'
+import store from './store'
 import getPageTitle from './utils/get-page-title'
 
 configure({ showSpinner: false }) // NProgress Configuration
@@ -9,11 +10,10 @@ configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
-  console.log('beforeEach: from', from)
   // start progress bar
   start()
   // determine whether the user has logged in
-  const hasToken = '123'
+  const hasToken = store.state.user.token
   if (hasToken) {
     // set page title
     document.title = getPageTitle(to.meta.title)

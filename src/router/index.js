@@ -28,26 +28,26 @@ export const constantRoutes = [
   {
     path: '/',
     component: () => import('@/layout/index.vue'),
-    redirect: '/system-management',
+    redirect: '/system',
     children: [
       {
-        path: '/system-management',
-        component: () => import('@/views/system-management/index.vue'),
+        path: '/system',
+        component: () => import('@/views/system/index.vue'),
         name: 'SystemManagement',
         meta: { title: '系统', icon: 'el-icon-position', affix: false },
-        redirect: '/system-management/admin',
+        redirect: '/system/admin',
         children: [
           {
-            path: '/system-management/admin',
+            path: '/system/admin',
             name: 'Admin',
             component: () =>
-              import('@/views/system-management/admin/index.vue'),
+              import('@/views/system/admin/index.vue'),
             meta: { title: '用户管理', icon: 'el-icon-position' }
           },
           {
-            path: '/system-management/role',
+            path: '/system/role',
             name: 'Role',
-            component: () => import('@/views/system-management/role/index.vue'),
+            component: () => import('@/views/system/role/index.vue'),
             meta: { title: '角色管理', icon: 'el-icon-position' }
           }
         ]

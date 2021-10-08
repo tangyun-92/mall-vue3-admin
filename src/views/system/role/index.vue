@@ -1,39 +1,22 @@
 /*
  * @Author: 唐云
- * @Date: 2021-07-27 13:31:03
+ * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-08 14:11:32
- 用户管理
+ * @Last Modified time: 2021-10-08 15:36:36
+ 角色管理
  */
-
 <template>
   <div class="home-view">
     <!-- 搜索 -->
     <div class="search-container">
       <el-form ref="form" :model="searchData" label-width="100px" size="small">
-        <el-form-item label="用户名">
+        <el-form-item label="角色名称">
           <el-input
-            v-model="searchData.username"
+            v-model="searchData.name"
             clearable
             placeholder="请输入"
             @keydown.enter="getTableList"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select
-            v-model="searchData.status"
-            placeholder="请选择"
-            clearable
-            @change="getTableList"
-          >
-            <el-option
-              v-for="item in ifEnable"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
         </el-form-item>
       </el-form>
       <el-button
@@ -89,7 +72,7 @@
           @click="
             multipleSelectionHandler({
               operation: '删除',
-              reqFn: delUser,
+              reqFn: delRole,
               data: {
                 id: selectIds
               }
@@ -106,10 +89,10 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="username" label="用戶名"> </el-table-column>
-          <el-table-column prop="email" label="邮箱"> </el-table-column>
-          <el-table-column prop="nick_name" label="昵称"> </el-table-column>
-          <el-table-column prop="note" label="备注"> </el-table-column>
+          <el-table-column prop="name" label="角色名称"> </el-table-column>
+          <el-table-column prop="description" label="描述"> </el-table-column>
+          <el-table-column prop="admin_count" label="用户数"> </el-table-column>
+          <el-table-column prop="create_time" label="创建时间"> </el-table-column>
           <el-table-column prop="status" label="状态">
             <template #default="scope">
               <el-tag v-if="scope.row.status === 1" type="success">
@@ -120,7 +103,7 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="160">
+          <el-table-column fixed="right" label="操作">
             <template #default="scope">
               <el-button
                 type="text"
@@ -134,7 +117,7 @@
                 @click="
                   multipleSelectionHandler({
                     operation: '删除',
-                    reqFn: delUser,
+                    reqFn: delRole,
                     data: {
                       id: String(scope.row.id).split(' ')
                     },
@@ -142,11 +125,6 @@
                   })
                 "
               >删除</el-button>
-              <el-button
-                type="text"
-                size="small"
-                @click="handlePassword(scope.row.id)"
-              >修改密码</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -192,80 +170,28 @@
         </span>
       </template>
     </el-dialog>
-    <!-- 修改密码 -->
-    <el-dialog
-      v-if="passwordVisible"
-      v-model="passwordVisible"
-      title="修改密码"
-      width="400px"
-    >
-      <div class="form-container">
-        <el-form
-          ref="passwordRef"
-          :model="passwordForm"
-          :rules="passwordRules"
-          class="form-data"
-          label-width="100px"
-          label-position="right"
-          size="small"
-        >
-          <el-form-item label="新密码" prop="password">
-            <el-input
-              v-model.trim="passwordForm.password"
-              placeholder="请输入"
-            ></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button
-            size="small"
-            @click="passwordVisible = false"
-          >取 消</el-button>
-          <el-button
-            type="primary"
-            size="small"
-            @click="updatePassword"
-          >确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import {
-  getUser,
-  changeStatus,
-  delUser,
-  changePassword
-} from '@/api/system/admin'
-import AES from '@/utils/aes'
+import { getRole, delRole, changeStatus } from '@/api/system/role'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { ifEnable, ifEnableDict } from '@/constants/dictionary'
 import { reactive, ref } from 'vue'
 import Form from './components/Form.vue'
-import { ElMessage } from 'element-plus'
+import { ifEnable, ifEnableDict } from '@/constants/dictionary'
 
-// 默认表单数据
-const formDataDefault = reactive({
-  username: '',
-  status: '',
-  email: '',
-  nick_name: '',
-  note: '',
-  id: null
-})
 // 搜索数据
 const searchData = reactive({
-  username: '',
-  status: ''
+  name: ''
+})
+// 默认表单数据
+const formDataDefault = reactive({
+  name: '',
+  description: '',
+  status: '',
+  id: null
 })
 
-/**
- * 自定义 hooks
- */
 const {
   data,
   handleSizeChange,
@@ -276,7 +202,7 @@ const {
   handleSelectionChange,
   multipleSelectionHandler,
   selectIds
-} = useBaseHooks({ reqFn: getUser, searchData, formDataDefault })
+} = useBaseHooks({ reqFn: getRole, searchData, formDataDefault })
 
 // 新增/编辑表单提交
 const formRef = ref(null)
@@ -284,37 +210,6 @@ const handleSubmit = () => {
   formRef.value.submit().then(() => {
     data.formDialogVisible = false
     getTableList()
-  })
-}
-
-/**
- * 修改密码
- */
-const passwordVisible = ref(false)
-const passwordId = ref(null)
-const passwordRef = ref(null)
-const passwordForm = reactive({
-  password: ''
-})
-const passwordRules = {
-  password: { required: true, message: '不能为空', trigger: 'blur' }
-}
-// 修改密码弹窗
-const handlePassword = (id) => {
-  passwordId.value = JSON.parse(JSON.stringify(id))
-  passwordVisible.value = true
-}
-// 修改密码请求
-const updatePassword = () => {
-  passwordRef.value.validate(async (valid) => {
-    if (valid) {
-      const res = await changePassword({
-        id: passwordId.value,
-        password: AES.encrypt(passwordForm.password)
-      })
-      ElMessage.success(res.message)
-      passwordVisible.value = false
-    }
   })
 }
 </script>

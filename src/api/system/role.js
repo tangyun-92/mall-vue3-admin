@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function getRole(data) {
   return request({
-    url: '/roles/list',
+    url: '/ums/roles/list',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function getRole(data) {
  */
 export function createOrEditRole(data) {
   return request({
-    url: '/roles/update',
+    url: '/ums/roles/update',
     method: 'post',
     data
   })
@@ -33,9 +33,21 @@ export function createOrEditRole(data) {
  */
 export function delRole(data) {
   return request({
-    url: '/roles/delete',
+    url: '/ums/roles/delete',
     method: 'post',
     data
   })
 }
 
+/**
+ * 更改状态
+ * @param {*} data
+ * @returns
+ */
+export function changeStatus(data) {
+  return request({
+    url: '/ums/roles/changeStatus',
+    method: 'post',
+    data
+  })
+}
