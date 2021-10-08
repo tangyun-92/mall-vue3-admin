@@ -41,6 +41,7 @@
       <el-form-item label="备注" prop="note">
         <el-input
           v-model.trim="formData.note"
+          type="textarea"
           placeholder="请输入"
         ></el-input>
       </el-form-item>

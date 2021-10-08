@@ -29,6 +29,7 @@
       <el-form-item label="描述" prop="description">
         <el-input
           v-model.trim="formData.description"
+          type="textarea"
           placeholder="请输入"
         ></el-input>
       </el-form-item>

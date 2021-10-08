@@ -53,48 +53,48 @@ export const constantRoutes = [
         ]
       },
       {
-        path: '/goods-management',
-        name: 'GoodsManagement',
-        component: () => import('@/views/goods-management/index.vue'),
-        meta: { title: '商品管理', icon: 'el-icon-position' },
-        redirect: '/goods-management/brand',
+        path: '/good',
+        name: 'GoodManagement',
+        component: () => import('@/views/good/index.vue'),
+        meta: { title: '商品', icon: 'el-icon-position' },
+        redirect: '/good/brand',
         children: [
           {
-            path: '/goods-management/brand',
-            component: () => import('@/views/goods-management/brand/index.vue'),
+            path: '/good/brand',
+            component: () => import('@/views/good/brand/index.vue'),
             name: 'Brand',
             meta: { title: '品牌管理', icon: 'el-icon-position' }
           },
           {
-            path: '/goods-management/category',
+            path: '/good/category',
             component: () =>
-              import('@/views/goods-management/category/index.vue'),
+              import('@/views/good/category/index.vue'),
             name: 'Category',
             meta: { title: '品类管理', icon: 'el-icon-position' }
           },
           // {
-          //   path: '/goods-management/parameter',
-          //   component: () => import('@/views/goods-management/parameter/index.vue'),
+          //   path: '/good/parameter',
+          //   component: () => import('@/views/good/parameter/index.vue'),
           //   name: 'Parameter',
           //   meta: { title: '参数管理', icon: 'el-icon-position' }
           // },
           {
-            path: '/goods-management/goods-category',
+            path: '/good/goods-category',
             component: () =>
-              import('@/views/goods-management/goods-category/index.vue'),
+              import('@/views/good/goods-category/index.vue'),
             name: 'GoodsCategory',
             meta: { title: '商品分类管理', icon: 'el-icon-position' }
           },
           {
-            path: '/goods-management/product',
+            path: '/good/product',
             component: () =>
-              import('@/views/goods-management/product/index.vue'),
+              import('@/views/good/product/index.vue'),
             name: 'Product',
             meta: { title: '产品管理', icon: 'el-icon-position' }
           },
           {
-            path: '/goods-management/goods',
-            component: () => import('@/views/goods-management/goods/index.vue'),
+            path: '/good/goods',
+            component: () => import('@/views/good/goods/index.vue'),
             name: 'Goods',
             meta: { title: '商品管理', icon: 'el-icon-position' }
           }

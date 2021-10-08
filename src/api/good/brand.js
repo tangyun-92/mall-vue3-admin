@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 11:10:10
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-07-30 13:42:47
+ * @Last Modified time: 2021-10-08 16:01:39
  * 品牌管理
  */
 import request from '@/utils/request'
@@ -14,7 +14,7 @@ import request from '@/utils/request'
  */
 export function getBrand(data) {
   return request({
-    url: '/brands/list',
+    url: '/pms/brands/list',
     method: 'post',
     data
   })
@@ -27,7 +27,7 @@ export function getBrand(data) {
  */
 export function createOrEditBrand(data) {
   return request({
-    url: '/brands/update',
+    url: '/pms/brands/update',
     method: 'post',
     data
   })
@@ -40,7 +40,7 @@ export function createOrEditBrand(data) {
  */
 export function delBrand(data) {
   return request({
-    url: '/brands/delete',
+    url: '/pms/brands/delete',
     method: 'post',
     data
   })
