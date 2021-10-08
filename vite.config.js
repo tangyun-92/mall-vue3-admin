@@ -7,9 +7,7 @@ export default defineConfig(({ command }) => {
   const prodMock = true
   return {
     base: command === 'serve' ? '/' : '/admin/',
-    plugins: [
-      vue()
-    ],
+    plugins: [vue()],
     resolve: {
       alias: {
         '@': resolve('./src'),

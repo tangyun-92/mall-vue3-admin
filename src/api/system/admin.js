@@ -7,7 +7,7 @@ import request from '@/utils/request'
  */
 export function getUser(data) {
   return request({
-    url: '/users/list',
+    url: '/ums/admins/list',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function getUser(data) {
  */
 export function createOrEditUser(data) {
   return request({
-    url: '/users/update',
+    url: '/ums/admins/update',
     method: 'post',
     data
   })
@@ -33,7 +33,7 @@ export function createOrEditUser(data) {
  */
 export function delUser(data) {
   return request({
-    url: '/users/delete',
+    url: '/ums/admins/delete',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function delUser(data) {
  */
 export function changeStatus(data) {
   return request({
-    url: '/users/status',
+    url: '/ums/admins/changeStatus',
     method: 'post',
     data
   })
@@ -59,7 +59,7 @@ export function changeStatus(data) {
  */
 export function changePassword(data) {
   return request({
-    url: '/users/password',
+    url: '/ums/admins/password',
     method: 'post',
     data
   })

@@ -34,13 +34,14 @@ export const constantRoutes = [
         path: '/system-management',
         component: () => import('@/views/system-management/index.vue'),
         name: 'SystemManagement',
-        meta: { title: '系统管理', icon: 'el-icon-position', affix: false },
-        redirect: '/system-management/user',
+        meta: { title: '系统', icon: 'el-icon-position', affix: false },
+        redirect: '/system-management/admin',
         children: [
           {
-            path: '/system-management/user',
-            name: 'User',
-            component: () => import('@/views/system-management/user/index.vue'),
+            path: '/system-management/admin',
+            name: 'Admin',
+            component: () =>
+              import('@/views/system-management/admin/index.vue'),
             meta: { title: '用户管理', icon: 'el-icon-position' }
           },
           {

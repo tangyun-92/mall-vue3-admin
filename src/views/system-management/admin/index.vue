@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-27 13:31:03
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-02 10:35:57
+ * @Last Modified time: 2021-10-08 14:11:32
  用户管理
  */
 
@@ -20,7 +20,12 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="searchData.status" placeholder="请选择" clearable @change="getTableList">
+          <el-select
+            v-model="searchData.status"
+            placeholder="请选择"
+            clearable
+            @change="getTableList"
+          >
             <el-option
               v-for="item in ifEnable"
               :key="item.value"
@@ -72,7 +77,7 @@
               reqFn: changeStatus,
               data: {
                 id: selectIds,
-                status: 2
+                status: 0
               }
             })
           "
@@ -101,16 +106,16 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="username" label="用戶名"> </el-table-column>
-          <el-table-column prop="employee" label="员工姓名"> </el-table-column>
-          <el-table-column prop="role" label="所属角色"> </el-table-column>
+          <el-table-column prop="email" label="邮箱"> </el-table-column>
+          <el-table-column prop="nick_name" label="昵称"> </el-table-column>
+          <el-table-column prop="note" label="备注"> </el-table-column>
           <el-table-column prop="status" label="状态">
             <template #default="scope">
               <el-tag v-if="scope.row.status === 1" type="success">
                 {{ ifEnableDict[scope.row.status] }}
               </el-tag>
-              <el-tag v-if="scope.row.status === 2" type="danger">
+              <el-tag v-if="scope.row.status === 0" type="danger">
                 {{ ifEnableDict[scope.row.status] }}
               </el-tag>
             </template>
@@ -229,115 +234,89 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {
   getUser,
   changeStatus,
   delUser,
   changePassword
-} from '@/api/system/user'
+} from '@/api/system/admin'
 import AES from '@/utils/aes'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { ifEnable, ifEnableDict } from '@/constants/dictionary'
-import { defineComponent, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import Form from './components/Form.vue'
 import { ElMessage } from 'element-plus'
 
-export default defineComponent({
-  name: 'User',
-  components: {
-    Form
-  },
-  setup() {
-    const formRef = ref(null)
-    // 修改密码
-    const passwordVisible = ref(false)
-    const passwordId = ref(null)
-    const passwordRef = ref(null)
-    const passwordForm = reactive({
-      password: ''
-    })
-    const passwordRules = {
-      password: { required: true, message: '不能为空', trigger: 'blur' }
-    }
-    // 搜索数据
-    const searchData = reactive({
-      username: '',
-      status: ''
-    })
-    // 默认表单数据
-    const formDataDefault = reactive({
-      username: '',
-      status: '',
-      role_id: '',
-      emp_id: '',
-      id: null
-    })
-
-    const {
-      data,
-      handleSizeChange,
-      handleCurrentChange,
-      getTableList,
-      handleCreate,
-      handleUpdate,
-      handleSelectionChange,
-      multipleSelectionHandler,
-      selectIds
-    } = useBaseHooks({ reqFn: getUser, searchData, formDataDefault })
-
-    // 新增/编辑表单提交
-    const handleSubmit = () => {
-      formRef.value.submit().then(() => {
-        data.formDialogVisible = false
-        getTableList()
-      })
-    }
-
-    const handlePassword = (id) => {
-      passwordId.value = JSON.parse(JSON.stringify(id))
-      passwordVisible.value = true
-    }
-    // 修改密码
-    const updatePassword = () => {
-      passwordRef.value.validate(async (valid) => {
-        if (valid) {
-          const res = await changePassword({
-            id: passwordId.value,
-            password: AES.encrypt(passwordForm.password)
-          })
-          ElMessage.success(res.message)
-          passwordVisible.value = false
-        }
-      })
-    }
-
-    return {
-      formRef,
-      data,
-      handleSizeChange,
-      handleCurrentChange,
-      getTableList,
-      handleCreate,
-      handleUpdate,
-      searchData,
-      ifEnable,
-      ifEnableDict,
-      handleSubmit,
-      handleSelectionChange,
-      multipleSelectionHandler,
-      changeStatus,
-      selectIds,
-      delUser,
-      passwordVisible,
-      handlePassword,
-      updatePassword,
-      passwordForm,
-      passwordRef,
-      passwordRules
-    }
-  }
+// 默认表单数据
+const formDataDefault = reactive({
+  username: '',
+  status: '',
+  email: '',
+  nick_name: '',
+  note: '',
+  id: null
 })
+// 搜索数据
+const searchData = reactive({
+  username: '',
+  status: ''
+})
+
+/**
+ * 自定义 hooks
+ */
+const {
+  data,
+  handleSizeChange,
+  handleCurrentChange,
+  getTableList,
+  handleCreate,
+  handleUpdate,
+  handleSelectionChange,
+  multipleSelectionHandler,
+  selectIds
+} = useBaseHooks({ reqFn: getUser, searchData, formDataDefault })
+
+// 新增/编辑表单提交
+const formRef = ref(null)
+const handleSubmit = () => {
+  formRef.value.submit().then(() => {
+    data.formDialogVisible = false
+    getTableList()
+  })
+}
+
+/**
+ * 修改密码
+ */
+const passwordVisible = ref(false)
+const passwordId = ref(null)
+const passwordRef = ref(null)
+const passwordForm = reactive({
+  password: ''
+})
+const passwordRules = {
+  password: { required: true, message: '不能为空', trigger: 'blur' }
+}
+// 修改密码弹窗
+const handlePassword = (id) => {
+  passwordId.value = JSON.parse(JSON.stringify(id))
+  passwordVisible.value = true
+}
+// 修改密码请求
+const updatePassword = () => {
+  passwordRef.value.validate(async (valid) => {
+    if (valid) {
+      const res = await changePassword({
+        id: passwordId.value,
+        password: AES.encrypt(passwordForm.password)
+      })
+      ElMessage.success(res.message)
+      passwordVisible.value = false
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped></style>
