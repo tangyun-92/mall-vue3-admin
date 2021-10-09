@@ -51,3 +51,9 @@ export const supplierType = [
   { label: '代理商', value: 2 },
   { label: '个人', value: 3 }
 ]
+
+// 是否显示
+export const ifShow = [
+  { label: '显示', value: 1 },
+  { label: '不显示', value: 0 }
+]

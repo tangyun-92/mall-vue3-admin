@@ -65,13 +65,13 @@ export const constantRoutes = [
             name: 'Brand',
             meta: { title: '品牌管理', icon: 'el-icon-position' }
           },
-          {
-            path: '/good/category',
-            component: () =>
-              import('@/views/good/category/index.vue'),
-            name: 'Category',
-            meta: { title: '品类管理', icon: 'el-icon-position' }
-          },
+          // {
+          //   path: '/good/category',
+          //   component: () =>
+          //     import('@/views/good/category/index.vue'),
+          //   name: 'Category',
+          //   meta: { title: '品类管理', icon: 'el-icon-position' }
+          // },
           // {
           //   path: '/good/parameter',
           //   component: () => import('@/views/good/parameter/index.vue'),
@@ -79,9 +79,9 @@ export const constantRoutes = [
           //   meta: { title: '参数管理', icon: 'el-icon-position' }
           // },
           {
-            path: '/good/goods-category',
+            path: '/good/category',
             component: () =>
-              import('@/views/good/goods-category/index.vue'),
+              import('@/views/good/category/index.vue'),
             name: 'GoodsCategory',
             meta: { title: '商品分类管理', icon: 'el-icon-position' }
           },

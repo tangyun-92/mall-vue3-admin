@@ -28,7 +28,9 @@ export default function ({ reqFn, searchData, formDataDefault }) {
   })
 
   onMounted(() => {
-    getTableList()
+    if (reqFn) {
+      getTableList()
+    }
   })
 
   /**
