@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-09 13:43:16
+ * @Last Modified time: 2021-10-09 13:57:18
  */
 <template>
   <div>
@@ -25,7 +25,7 @@
       <el-form-item label="上级分类" prop="parent_id">
         <el-select v-model="formData.parent_id" placeholder="请选择" clearable>
           <el-option
-            v-for="item in tableData"
+            v-for="item in subCategoryData"
             :key="item.id"
             :label="item.name"
             :value="item.id"
@@ -101,7 +101,7 @@ const props = defineProps({
     type: String,
     default: 'create'
   },
-  tableData: {
+  subCategoryData: {
     type: Array,
     default() {
       return []

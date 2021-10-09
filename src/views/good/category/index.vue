@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-09 13:50:55
+ * @Last Modified time: 2021-10-09 13:57:52
  商品分类管理
  */
 <template>
@@ -53,7 +53,7 @@
       <!-- 表格 -->
       <div class="table-main">
         <el-table
-          :data="tableData"
+          :data="data.tableData"
           stripe
           style="width: 100%"
           row-key="id"
@@ -122,7 +122,7 @@
           ref="formRef"
           :status="data.dialogStatus"
           :data="data.formData"
-          :table-data="data.tableData"
+          :sub-category-data="subCategoryData"
         ></Form>
       </div>
       <template #footer>
@@ -165,8 +165,16 @@ const formDataDefault = reactive({
   id: null
 })
 
-const tableData = computed(() => {
-  return data.tableData.filter(item => item.id !== 0)
+// 上级分类数据
+const subCategoryData = computed(() => {
+  const obj = {
+    id: 0,
+    parent_id: 0,
+    name: '无上级分类'
+  }
+  const arr = JSON.parse(JSON.stringify(data.tableData))
+  arr.unshift(obj)
+  return arr
 })
 
 const {
