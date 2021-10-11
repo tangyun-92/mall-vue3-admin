@@ -57,3 +57,29 @@ export const ifShow = [
   { label: '显示', value: 1 },
   { label: '不显示', value: 0 }
 ]
+
+// 检索类型
+export const searchType = [
+  { label: '不需要进行检索', value: 1 },
+  { label: '关键字检索', value: 2 },
+  { label: '范围检索', value: 3 }
+]
+
+// 分类筛选样式
+export const filterType = [
+  { label: '普通', value: 1 },
+  { label: '颜色', value: 2 }
+]
+
+// 属性录入方式
+export const inputType = [
+  { label: '手工录入', value: 1 },
+  { label: '从列表中选取', value: 2 }
+]
+
+// 属性是否可选
+export const selectType = [
+  { label: '唯一', value: 1 },
+  { label: '单选', value: 2 },
+  { label: '多选', value: 3 }
+]

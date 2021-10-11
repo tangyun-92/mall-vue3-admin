@@ -38,11 +38,12 @@ service.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       router.push('/login')
+      store.commit('user/SET_TOKEN', '')
       ElMessage({
         type: 'error',
         message: 'token已过期，请重新登录'
       })
-      return Promise.reject(error)
+      // return Promise.reject(error)
     }
     ElMessage({
       type: 'error',

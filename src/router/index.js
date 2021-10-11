@@ -40,8 +40,7 @@ export const constantRoutes = [
           {
             path: '/system/admin',
             name: 'Admin',
-            component: () =>
-              import('@/views/system/admin/index.vue'),
+            component: () => import('@/views/system/admin/index.vue'),
             meta: { title: '用户管理', icon: 'el-icon-position' }
           },
           {
@@ -80,17 +79,15 @@ export const constantRoutes = [
           // },
           {
             path: '/good/category',
-            component: () =>
-              import('@/views/good/category/index.vue'),
+            component: () => import('@/views/good/category/index.vue'),
             name: 'GoodsCategory',
             meta: { title: '商品分类管理', icon: 'el-icon-position' }
           },
           {
-            path: '/good/product',
-            component: () =>
-              import('@/views/good/product/index.vue'),
-            name: 'Product',
-            meta: { title: '产品管理', icon: 'el-icon-position' }
+            path: '/good/attribute-category',
+            component: () => import('@/views/good/attribute-category/index.vue'),
+            name: 'AttributeCategory',
+            meta: { title: '商品类型管理', icon: 'el-icon-position' }
           },
           {
             path: '/good/goods',
