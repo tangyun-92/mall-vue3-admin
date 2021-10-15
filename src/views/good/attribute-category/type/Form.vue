@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-09 16:12:35
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-11 13:09:07
+ * @Last Modified time: 2021-10-12 14:07:48
  */
 
 <template>
@@ -136,6 +136,25 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="是否支持手动新增" prop="hand_add_status">
+            <el-select
+              v-model="formData.hand_add_status"
+              placeholder="请选择"
+              clearable
+            >
+              <el-option
+                v-for="item in handAddStatus"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -144,7 +163,7 @@
 import { defineProps, defineExpose, onMounted, reactive, ref } from 'vue'
 import { createOrEditAttribute } from '@/api/good/attribute'
 import { ElMessage } from 'element-plus'
-import { searchType, filterType, inputType, selectType } from '@/constants/dictionary'
+import { searchType, filterType, inputType, selectType, handAddStatus } from '@/constants/dictionary'
 
 const props = defineProps({
   data: {
@@ -184,6 +203,7 @@ const formData = reactive({
   sort: null,
   filter_type: null,
   search_type: null,
+  hand_add_status: null,
   id: null
 })
 // 校验规则

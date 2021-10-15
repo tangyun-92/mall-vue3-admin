@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 11:10:10
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-08 16:01:39
+ * @Last Modified time: 2021-10-12 09:28:17
  * 品牌管理
  */
 import request from '@/utils/request'
@@ -15,6 +15,19 @@ import request from '@/utils/request'
 export function getBrand(data) {
   return request({
     url: '/pms/brands/list',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取所有品牌map
+ * @param {*} data
+ * @returns
+ */
+export function getBrandMap(data) {
+  return request({
+    url: '/pms/brands/listMap',
     method: 'post',
     data
   })

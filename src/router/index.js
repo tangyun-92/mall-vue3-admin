@@ -85,15 +85,22 @@ export const constantRoutes = [
           },
           {
             path: '/good/attribute-category',
-            component: () => import('@/views/good/attribute-category/index.vue'),
+            component: () =>
+              import('@/views/good/attribute-category/index.vue'),
             name: 'AttributeCategory',
             meta: { title: '商品类型管理', icon: 'el-icon-position' }
           },
           {
-            path: '/good/goods',
-            component: () => import('@/views/good/goods/index.vue'),
-            name: 'Goods',
+            path: '/good/product',
+            component: () => import('@/views/good/product/index.vue'),
+            name: 'Product',
             meta: { title: '商品管理', icon: 'el-icon-position' }
+          },
+          {
+            path: '/good/add-product',
+            component: () => import('@/views/good/add-product/index.vue'),
+            name: 'NewProduct',
+            meta: { title: '新增商品', icon: 'el-icon-position' }
           }
         ]
       },

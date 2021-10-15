@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-09 15:21:11
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-09 16:36:58
+ * @Last Modified time: 2021-10-12 11:08:09
  * 商品类型管理
  */
 
@@ -22,7 +22,7 @@ export function getGoodsAttributeCategory(data) {
 }
 
 /**
- * 获取商品类型列表
+ * 获取商品类型列表map
  * @param {*} data
  * @returns
  */

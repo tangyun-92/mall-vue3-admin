@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-09 15:45:56
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-11 13:19:47
+ * @Last Modified time: 2021-10-12 14:08:04
  商品属性
  */
 
@@ -159,6 +159,7 @@ const formDataDefault = reactive({
   sort: null,
   filter_type: null,
   search_type: null,
+  hand_add_status: null,
   id: null
 })
 const paramData = reactive({

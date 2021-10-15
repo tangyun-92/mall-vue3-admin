@@ -1,4 +1,3 @@
-import { ElMessage } from 'element-plus'
 
 const state = {
   token: ''
