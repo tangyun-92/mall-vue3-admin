@@ -2,17 +2,17 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-08-02 10:35:25
- 职位管理
+ * @Last Modified time: 2021-10-22 16:06:44
+ 专题管理
  */
 <template>
   <div class="home-view">
     <!-- 搜索 -->
     <div class="search-container">
       <el-form ref="form" :model="searchData" label-width="100px" size="small">
-        <el-form-item label="职位名称">
+        <el-form-item label="品牌名称">
           <el-input
-            v-model="searchData.job"
+            v-model="searchData.name"
             clearable
             placeholder="请输入"
             @keydown.enter="getTableList"
@@ -42,7 +42,7 @@
           @click="
             multipleSelectionHandler({
               operation: '删除',
-              reqFn: delJob,
+              reqFn: delBrand,
               data: {
                 id: selectIds
               }
@@ -59,9 +59,29 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="id" label="id"> </el-table-column>
-          <el-table-column prop="job" label="职位名称"> </el-table-column>
-          <el-table-column fixed="right" label="操作">
+          <el-table-column prop="logo" label="品牌logo" width="120">
+            <template #default="scope">
+              <img v-if="scope.row.logo" class="brand-logo" :src="scope.row.logo" alt="" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="name" label="品牌名称"> </el-table-column>
+          <el-table-column prop="first_letter" label="品牌首字母" width="120"> </el-table-column>
+          <el-table-column prop="factory_status" label="是否为品牌制造商" width="150">
+            <template #default="scope">
+              <el-tag v-if="scope.row.factory_status === 1" type="success">是</el-tag>
+              <el-tag v-if="scope.row.factory_status === 0" type="danger">否</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="show_status" label="是否显示" width="120">
+            <template #default="scope">
+              <el-tag v-if="scope.row.show_status === 1" type="success">是</el-tag>
+              <el-tag v-if="scope.row.show_status === 0" type="danger">否</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="product_count" label="产品数量" width="120">
+          </el-table-column>
+          <el-table-column prop="product_comment_count" label="产品评论数量" width="120"> </el-table-column>
+          <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
               <el-button
                 type="text"
@@ -74,7 +94,7 @@
                 @click="
                   multipleSelectionHandler({
                     operation: '删除',
-                    reqFn: delJob,
+                    reqFn: delBrand,
                     data: {
                       id: String(scope.row.id).split(' ')
                     },
@@ -99,12 +119,12 @@
       @current-change="handleCurrentChange"
     >
     </el-pagination>
-    <!-- 新增/编辑职位 -->
+    <!-- 新增/编辑品牌 -->
     <el-dialog
       v-if="data.formDialogVisible"
       v-model="data.formDialogVisible"
       :title="data.dialogTitle"
-      width="400px"
+      width="600px"
     >
       <div class="form-container">
         <Form
@@ -130,67 +150,55 @@
   </div>
 </template>
 
-<script>
-import { getJob, delJob } from '@/api/employee/job'
+<script setup>
+import { getBrand, delBrand } from '@/api/good/brand'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { defineComponent, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import Form from './components/Form.vue'
 
-export default defineComponent({
-  name: 'Job',
-  components: {
-    Form
-  },
-  setup() {
-    const formRef = ref(null)
-    // 搜索数据
-    const searchData = reactive({
-      job: ''
-    })
-    // 默认表单数据
-    const formDataDefault = reactive({
-      job: '',
-      id: null
-    })
-
-    const {
-      data,
-      handleSizeChange,
-      handleCurrentChange,
-      getTableList,
-      handleCreate,
-      handleUpdate,
-      handleSelectionChange,
-      multipleSelectionHandler,
-      selectIds
-    } = useBaseHooks({ reqFn: getJob, searchData, formDataDefault })
-
-    // 新增/编辑表单提交
-    const handleSubmit = () => {
-      formRef.value.submit().then(() => {
-        data.formDialogVisible = false
-        getTableList()
-      })
-    }
-
-    return {
-      formRef,
-      data,
-      handleSizeChange,
-      handleCurrentChange,
-      getTableList,
-      handleCreate,
-      handleUpdate,
-      searchData,
-      handleSubmit,
-      handleSelectionChange,
-      delJob,
-      multipleSelectionHandler,
-      selectIds
-    }
-  }
+const formRef = ref(null)
+// 搜索数据
+const searchData = reactive({
+  name: ''
 })
+// 默认表单数据
+const formDataDefault = reactive({
+  name: '',
+  first_letter: '',
+  factory_status: null,
+  show_status: null,
+  logo: '',
+  brand_story: '',
+  id: null
+})
+
+const {
+  data,
+  handleSizeChange,
+  handleCurrentChange,
+  getTableList,
+  handleCreate,
+  handleUpdate,
+  handleSelectionChange,
+  multipleSelectionHandler,
+  selectIds
+} = useBaseHooks({ reqFn: getBrand, searchData, formDataDefault })
+
+// 新增/编辑表单提交
+const handleSubmit = () => {
+  formRef.value.submit().then(() => {
+    data.formDialogVisible = false
+    getTableList()
+  })
+}
+
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.brand-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+</style>
 

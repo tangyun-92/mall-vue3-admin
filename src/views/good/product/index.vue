@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-22 15:36:09
+ * @Last Modified time: 2021-10-22 16:00:32
  商品管理
  */
 <template>
@@ -113,7 +113,7 @@
           <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="pic" label="商品图片">
             <template #default="scope">
-              <img style="width: 60px; height: 60px;" :src="scope.row.pic" />
+              <img style="width: 60px; height: 60px; object-fit:cover;" :src="scope.row.pic" />
             </template>
           </el-table-column>
           <el-table-column prop="name" label="商品名称"> </el-table-column>

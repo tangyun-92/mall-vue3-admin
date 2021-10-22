@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 13:27:30
+ * @Last Modified time: 2021-10-22 15:51:08
  品牌管理
  */
 <template>
@@ -198,7 +198,7 @@ const handleSubmit = () => {
 .brand-logo {
   width: 50px;
   height: 50px;
-  object-fit: fill;
+  object-fit: cover;
 }
 </style>
 
