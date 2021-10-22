@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-11 16:40:06
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 17:26:44
+ * @Last Modified time: 2021-10-22 14:08:11
  新增商品
  */
 <template>
@@ -104,6 +104,8 @@ const productDetail = reactive({
   detail_desc: '',
   keywords: '',
   note: '',
+  pic: '',
+  album_pics: '',
   promotion_type: null,
   promotion_start_time: '',
   promotion_end_time: '',
@@ -142,12 +144,16 @@ const next = () => {
   const productInfo = store.state.baseData.productInfo
   // 填写商品信息
   if (active.value === ProductEnum.info) {
-    active.value++
-    console.log(productDetail, 'productDetail')
+    infoRef.value.submit().then(() => {
+      active.value++
+      console.log(productDetail, 'productDetail')
+    })
   } else if (active.value === ProductEnum.promotion) {
     // 填写商品促销
-    active.value++
-    console.log(productDetail, 'productDetail')
+    promotionRef.value.submit().then(() => {
+      active.value++
+      console.log(productDetail, 'productDetail')
+    })
   } else if (active.value === ProductEnum.attribute) {
     attributeRef.value.submit()
     // 填写商品属性

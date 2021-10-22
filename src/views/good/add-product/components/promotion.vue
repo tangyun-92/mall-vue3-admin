@@ -2,13 +2,14 @@
  * @Author: 唐云
  * @Date: 2021-10-12 09:56:32
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 13:38:41
+ * @Last Modified time: 2021-10-22 15:14:45
  商品促销
  */
 <template>
   <div>
     <el-form
       ref="formRef"
+      :rules="rules"
       :model="formData"
       label-width="120px"
       class="form-data"
@@ -128,11 +129,8 @@
 </template>
 
 <script setup>
-import { defineProps, reactive, ref, defineExpose, onMounted, computed, watch } from 'vue'
+import { defineProps, ref, defineExpose, computed, onMounted } from 'vue'
 import { productService, promotionType } from '@/constants/dictionary'
-import { useStore } from 'vuex'
-
-const store = useStore()
 
 const props = defineProps({
   modelValue: {
@@ -143,17 +141,18 @@ const props = defineProps({
 })
 
 const formRef = ref(null)
+const rules = {
+  publish_status: [{ required: true, message: '不能为空', trigger: 'change' }],
+  new_status: [{ required: true, message: '不能为空', trigger: 'change' }],
+  recommend_status: [{ required: true, message: '不能为空', trigger: 'change' }]
+}
 
-// 从vuex中获取保存的商品信息
-const productInfo = computed(() => store.state.baseData.productInfo)
 const formData = computed(() => {
   return props.modelValue
 })
 
 onMounted(() => {
-  // if (formData.value.promotion_type) {
-  //   currentPromotionType.value = formData.value.promotion_type
-  // }
+  changePromotionType(formData.value.promotion_type)
 })
 
 /**

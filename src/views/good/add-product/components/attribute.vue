@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-12 11:05:33
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 17:26:00
+ * @Last Modified time: 2021-10-22 15:15:02
  商品属性
  */
 <template>
@@ -134,7 +134,7 @@
         <el-card shadow="never">
           <div v-for="item in selectProductAttrPics" :key="item.pic">
             <span>{{ item.name }}:</span>
-            <SingleUpload v-model="item.pic" class="single-upload" />
+            <SingleUpload v-model="item.pic" class="single-upload" :name="item.name" @input="handleInput" />
           </div>
         </el-card>
       </el-form-item>
@@ -144,8 +144,20 @@
           <div v-for="(item, index) in selectProductParam" :key="item.id">
             <el-form-item :label="item.name + ':'">
               <el-select
-                v-if="item.input_type === 2"
+                v-if="item.input_type === 2 && item.select_type === 2"
                 v-model="selectProductParam[index].value"
+              >
+                <el-option
+                  v-for="val in getInputListArr(item.input_list)"
+                  :key="val"
+                  :label="val"
+                  :value="val"
+                ></el-option>
+              </el-select>
+              <el-select
+                v-if="item.input_type === 2 && item.select_type === 3"
+                v-model="selectProductParam[index].value"
+                multiple
               >
                 <el-option
                   v-for="val in getInputListArr(item.input_list)"
@@ -162,6 +174,10 @@
           </div>
         </el-card>
       </el-form-item>
+      <!-- 商品相册 -->
+      <el-form-item label="商品相册:">
+        <MultiUpload v-model="selectProductPics" :max-count="5" @input="handlePicsInput" />
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -169,10 +185,10 @@
 <script setup>
 import { getGoodsAttributeCategoryMap } from '@/api/good/attribute-category'
 import { getGoodsAttribute } from '@/api/good/attribute'
-import { computed, defineProps, onMounted, reactive, ref, defineExpose, onUnmounted, onBeforeUnmount } from 'vue'
+import { computed, defineProps, onMounted, ref, defineExpose } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import SingleUpload from '@/components/SingleUpload/index.vue'
-import { useStore } from 'vuex'
+import MultiUpload from '@/components/MultiUpload/index.vue'
 
 const props = defineProps({
   modelValue: {
@@ -181,8 +197,6 @@ const props = defineProps({
   },
   editId: null
 })
-
-const store = useStore()
 
 const formRef = ref(null)
 
@@ -210,6 +224,21 @@ const selectProductAttr = ref([]) // 选中的商品属性
 const selectProductParam = ref([]) // 选中的商品参数
 
 const changeAttributeType = (id) => {
+  // console.log(formData.value.skuTableData)
+  formData.value.skuTableData.forEach(item => {
+    console.log(JSON.parse(item.sp_data))
+    selectProductAttrPics.value.push({
+      name: JSON.parse(item.sp_data)[0].value,
+      pic: item.pic
+    })
+    const obj = {}
+    selectProductAttrPics.value = selectProductAttrPics.value.reduce((item, next) => {
+      obj[next.name] ? '' : obj[next.name] = true && item.push(next)
+      return item
+    }, [])
+    console.log(selectProductAttrPics.value)
+  })
+  // refreshProductAttrPics()
   // 获取商品属性
   getGoodsAttribute({
     attributeCategoryId: id
@@ -227,7 +256,7 @@ const changeAttributeType = (id) => {
         values = getEditAttrValues(i)
       }
       selectProductAttr.value.push({
-        id: listAttr[i].id,
+        product_attribute_id: listAttr[i].id,
         name: listAttr[i].name,
         hand_add_status: listAttr[i].hand_add_status,
         input_list: listAttr[i].input_list,
@@ -244,18 +273,23 @@ const changeAttributeType = (id) => {
         formData.value.productAttributeValueList.forEach((item, index) => {
           if (listParam[i].id === formData.value.productAttributeValueList[index].product_attribute_id) {
             value = formData.value.productAttributeValueList[index].value
+            id = formData.value.productAttributeValueList[index].id
+            if (listParam[i].select_type === 3) {
+              value = value.split(',')
+            }
           }
         })
       }
       selectProductParam.value.push({
-        id: listParam[i].id,
+        id,
+        product_attribute_id: listParam[i].id,
         name: listParam[i].name,
         value,
         input_type: listParam[i].input_type,
+        select_type: listParam[i].select_type,
         input_list: listParam[i].input_list
       })
     }
-    console.log(selectProductParam.value)
   })
 }
 // 获取设置的手动添加属性
@@ -341,6 +375,22 @@ const handleAddProductAttr = (index) => {
   addProductAttr.value = null
 }
 
+function getGroupResult(dataList) {
+  return dataList.reduce((r, { name, value }) => {
+    r[name] = r[name] || []
+    r[name].push(value)
+    return r
+  }, {})
+}
+function combination(groupInfo) {
+  return Object.entries(groupInfo).reduce((result, [key, valueList]) => {
+    return valueList.reduce((subResult, value) => {
+      const tail = result.map(i => ({ ...i, [key]: value }))
+      return subResult.concat(tail)
+    }, [])
+  }, [{}])
+}
+
 // 刷新列表
 const refreshList = () => {
   ElMessageBox.confirm('刷新列表将导致sku信息重新生成，是否确定？', '提示', {
@@ -348,76 +398,26 @@ const refreshList = () => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    formData.value.skuTableData = []
     const skuList = formData.value.skuTableData
-    if (selectProductAttr.value.length === 1) {
-      const attr = selectProductAttr.value[0]
-      attr.values.forEach((item, index) => {
-        skuList.push({
-          sp_data: JSON.stringify([
-            { key: attr.name, value: attr.values[index] }
-          ])
+    const newArr = []
+    selectProductAttr.value.forEach((item) => {
+      item.values.forEach(val => {
+        newArr.push({
+          name: item.name,
+          value: val
         })
       })
-    } else if (selectProductAttr.value.length === 2) {
-      const attr0 = selectProductAttr.value[0]
-      const attr1 = selectProductAttr.value[1]
-      for (let i = 0; i < attr0.values.length; i++) {
-        if (attr1.values.length === 0) {
-          skuList.push({
-            sp_data: JSON.stringify([
-              { key: attr0.name, value: attr0.values[i] }
-            ])
-          })
-          continue
-        }
-        for (let j = 0; j < attr1.values.length; j++) {
-          const sp_data = []
-          sp_data.push({ key: attr0.name, value: attr0.values[i] })
-          sp_data.push({ key: attr1.name, value: attr1.values[j] })
-          skuList.push({
-            sp_data: JSON.stringify(sp_data)
-          })
-        }
-      }
-    } else if (selectProductAttr.value.length === 3) {
-      const attr0 = selectProductAttr.value[0]
-      const attr1 = selectProductAttr.value[1]
-      const attr2 = selectProductAttr.value[2]
-      for (let i = 0; i < attr0.values.length; i++) {
-        if (attr1.values.length === 0) {
-          skuList.push({
-            sp_data: JSON.stringify([
-              { key: attr0.name, value: attr0.values[i] }
-            ])
-          })
-          continue
-        }
-        for (let j = 0; j < attr1.values.length; j++) {
-          if (attr2.values.length === 0) {
-            const sp_data = []
-            sp_data.push({ key: attr0.name, value: attr0.values[i] })
-            sp_data.push({ key: attr1.name, value: attr1.values[j] })
-            skuList.push({
-              sp_data: JSON.stringify(sp_data)
-            })
-            continue
-          }
-          for (let k = 0; k < attr2.values.length; k++) {
-            const sp_data = []
-            sp_data.push({ key: attr0.name, value: attr0.values[i] })
-            sp_data.push({ key: attr1.name, value: attr1.values[j] })
-            sp_data.push({ key: attr2.name, value: attr2.values[k] })
-            skuList.push({
-              sp_data: JSON.stringify(sp_data)
-            })
-          }
-        }
-      }
-    }
+    })
+    const group = getGroupResult(newArr)
+    const result = combination(group)
+    result.forEach((item) => {
+      const data = Object.keys(item).map(r => ({ key: r, value: item[r] }))
+      skuList.push({ sp_data: JSON.stringify(data) })
+    })
     refreshProductAttrPics()
   })
 }
+
 // 删除商品sku
 const handleRemoveProductSku = (index, row) => {
   formData.value.skuTableData.splice(index, 1)
@@ -448,7 +448,7 @@ const handleSyncSku = () => {
  */
 const selectProductAttrPics = ref([]) // 选中的商品属性图片
 const hasAttrPic = computed(() => {
-  if (selectProductAttrPics.value.length < 1) {
+  if (formData.value.skuTableData.length < 1) {
     return false
   }
   return true
@@ -459,12 +459,28 @@ const refreshProductAttrPics = () => {
     const values = selectProductAttr.value[0].values
     for (let i = 0; i < values.length; i++) {
       const pic = null
-      // if (isEdit.value) {
-      //   pic =
-      // }
       selectProductAttrPics.value.push({ name: values[i], pic })
     }
   }
+}
+// 商品属性图片上传回调
+const handleInput = (val) => {
+  selectProductAttrPics.value.forEach(item => {
+    if (item.name === val.colorName) {
+      item.pic = val.url
+    }
+  })
+}
+// 获取商品相关属性的图片
+const getProductSkuPic = (name) => {
+  for (let i = 0; i < formData.value.skuTableData.length; i++) {
+    console.log(formData.value)
+    const sp_data = JSON.parse(formData.value.skuTableData[i].sp_data)
+    if (name === sp_data[0].value) {
+      return formData.value.skuTableData[i].pic
+    }
+  }
+  return null
 }
 
 // 合并商品属性
@@ -474,7 +490,7 @@ const mergeProductAttr = () => {
     const attr = selectProductAttr.value[index]
     if (attr.hand_add_status === 2 && attr.options && attr.options.length > 0) {
       formData.value.productAttributeValueList.push({
-        product_attribute_id: attr.id,
+        product_attribute_id: attr.product_attribute_id,
         value: getOptionStr(attr.options)
       })
     }
@@ -482,11 +498,26 @@ const mergeProductAttr = () => {
   selectProductParam.value.forEach((item, index) => {
     const param = selectProductParam.value[index]
     formData.value.productAttributeValueList.push({
-      product_attribute_id: param.id,
-      value: param.value
+      product_attribute_id: param.product_attribute_id,
+      id: param.id ? param.id : null,
+      value: param.select_type === 3 ? getOptionStr(param.value) : param.value
     })
   })
 }
+// 合并商品图片
+const mergeProductPics = () => {
+  console.log(selectProductAttrPics.value)
+  for (let i = 0; i < selectProductAttrPics.value.length; i++) {
+    for (let j = 0; j < formData.value.skuTableData.length; j++) {
+      const sp_data = JSON.parse(formData.value.skuTableData[j].sp_data)
+      if (sp_data[0].value === selectProductAttrPics.value[i].name) {
+        console.log(selectProductAttrPics.value[i].pic)
+        formData.value.skuTableData[j].pic = selectProductAttrPics.value[i].pic
+      }
+    }
+  }
+}
+
 // 将options转为字符串并拼接
 const getOptionStr = (arr) => {
   let str = ''
@@ -499,8 +530,49 @@ const getOptionStr = (arr) => {
   return str
 }
 
+/**
+ * 商品的主图和画册图片
+ */
+const selectProductPics = computed({
+  get() {
+    const pics = []
+    if (!formData.value.album_pics) {
+      return pics
+    }
+    const albumPics = formData.value.album_pics.split(',')
+    formData.value.pic = albumPics[0]
+    albumPics.forEach((item) => {
+      pics.push(item)
+    })
+    return pics
+  },
+  set(newValue) {
+    if (newValue === null || newValue.length === 0) {
+      formData.value.pic = null
+      formData.value.album_pics = null
+    } else {
+      formData.value.pic = newValue[0]
+      formData.value.album_pics = ''
+      if (newValue.length >= 1) {
+        for (let i = 0; i < newValue.length; i++) {
+          formData.value.album_pics += newValue[i]
+          if (i !== newValue.length - 1) {
+            formData.value.album_pics += ','
+          }
+        }
+      }
+    }
+  }
+})
+// 商品的主图和画册图片上传回调
+const handlePicsInput = (fileList) => {
+  selectProductPics.value = fileList
+}
+
+// 点击下一步时合并属性与图片
 const submit = () => {
   mergeProductAttr()
+  mergeProductPics()
 }
 
 defineExpose({

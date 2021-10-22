@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 10:06:57
+ * @Last Modified time: 2021-10-22 15:36:09
  商品管理
  */
 <template>
@@ -27,30 +27,23 @@
             @change="getTableList"
           >
             <el-option
-              v-for="item in product"
+              v-for="item in brandList"
               :key="item.id"
-              :label="item.title"
+              :label="item.name"
               :value="item.id"
             >
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="商品分类">
-          <el-select
-            v-model="searchData.brand_id"
-            placeholder="请选择"
-            clearable
+          <el-cascader
+            v-model="searchData.product_category_id"
+            :options="productCategoryList"
+            :props="cascaderProps"
             filterable
+            clearable
             @change="getTableList"
-          >
-            <el-option
-              v-for="item in product"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            >
-            </el-option>
-          </el-select>
+          ></el-cascader>
         </el-form-item>
         <el-form-item label="货号">
           <el-input
@@ -69,10 +62,10 @@
             @change="getTableList"
           >
             <el-option
-              v-for="item in product"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
+              v-for="item in publishStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             >
             </el-option>
           </el-select>
@@ -118,7 +111,11 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="product_name" label="商品图片"> </el-table-column>
+          <el-table-column prop="pic" label="商品图片">
+            <template #default="scope">
+              <img style="width: 60px; height: 60px;" :src="scope.row.pic" />
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="商品名称"> </el-table-column>
           <el-table-column prop="price" label="价格"> </el-table-column>
           <el-table-column prop="product_sn" label="货号"> </el-table-column>
@@ -185,49 +182,21 @@
       @current-change="handleCurrentChange"
     >
     </el-pagination>
-    <!-- 新增/编辑商品 -->
-    <el-dialog
-      v-if="data.formDialogVisible"
-      v-model="data.formDialogVisible"
-      :title="data.dialogTitle"
-      width="800px"
-    >
-      <div class="form-container">
-        <Form
-          ref="formRef"
-          :status="data.dialogStatus"
-          :data="data.formData"
-          :product="product"
-        ></Form>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button
-            size="small"
-            @click="data.formDialogVisible = false"
-          >取 消</el-button>
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleSubmit"
-          >确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup>
+import { getBrandMap } from '@/api/good/brand'
 import { getProduct, delProduct } from '@/api/good/product'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { defineComponent, onMounted, reactive, ref } from 'vue'
-import Form from './components/Form.vue'
-import { whether } from '@/constants/dictionary'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { publishStatus } from '@/constants/dictionary'
+import { getGoodsCategory } from '@/api/good/category'
 
 const router = useRouter()
+
 const formRef = ref(null)
-const product = ref([])
 // 搜索数据
 const searchData = reactive({
   name: '',
@@ -235,17 +204,6 @@ const searchData = reactive({
   product_category_id: '',
   product_sn: '',
   publish_status: ''
-})
-// 默认表单数据
-const formDataDefault = reactive({
-  spu_id: null,
-  title: '',
-  images: '',
-  price: null,
-  param: '',
-  saleable: null,
-  valid: null,
-  id: null
 })
 
 const {
@@ -257,26 +215,30 @@ const {
   multipleSelectionHandler,
   selectIds,
   filterConstants
-} = useBaseHooks({ reqFn: getProduct, searchData, formDataDefault })
+} = useBaseHooks({ reqFn: getProduct, searchData })
 
 onMounted(() => {
-  // getProductList()
+  getBrandList()
+  getProductCategoryList()
 })
-
-// 获取产品列表
-// const getProductList = async () => {
-//   const res = await getProduct({
-//     page: 1,
-//     pageSize: 5000
-//   })
-//   product.value = res.data.records
-// }
-
-// 新增/编辑表单提交
-const handleSubmit = () => {
-  formRef.value.submit().then(() => {
-    data.formDialogVisible = false
-    getTableList()
+const brandList = ref([])
+// 获取品牌列表
+const getBrandList = () => {
+  getBrandMap().then(res => {
+    brandList.value = res.data.records
+  })
+}
+const productCategoryList = ref([])
+// 级联配置
+const cascaderProps = reactive({
+  value: 'id',
+  label: 'name',
+  emitPath: false
+})
+// 获取商品分类列表
+const getProductCategoryList = () => {
+  getGoodsCategory().then(res => {
+    productCategoryList.value = res.data.records
   })
 }
 

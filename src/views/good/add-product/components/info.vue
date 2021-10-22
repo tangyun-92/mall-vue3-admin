@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-11 17:04:08
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 14:35:51
+ * @Last Modified time: 2021-10-22 15:32:45
  填写商品信息
  */
 <template>
@@ -21,7 +21,6 @@
           :options="productCategoryData"
           :props="cascaderProps"
           filterable
-          @change="handleChangeCascader"
         ></el-cascader>
       </el-form-item>
       <el-form-item label="商品名称" prop="name">
@@ -83,9 +82,7 @@ import { getBrandMap } from '@/api/good/brand'
 import { getGoodsCategory } from '@/api/good/category'
 import { reactive, defineExpose, defineProps, onMounted, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
 
-const store = useStore()
 const route = useRoute()
 
 const props = defineProps({
@@ -104,8 +101,6 @@ const rules = {
   brand_id: [{ required: true, message: '不能为空', trigger: 'change' }]
 }
 
-// 从vuex中获取保存的商品信息
-const productInfo = computed(() => store.state.baseData.productInfo)
 const formData = computed(() => {
   return props.modelValue
 })
@@ -128,12 +123,13 @@ const getProductList = () => {
 // 级联配置
 const cascaderProps = reactive({
   value: 'id',
-  label: 'name'
+  label: 'name',
+  emitPath: false
 })
 // 切换级联选择器
-const handleChangeCascader = (arr) => {
-  formData.value.product_category_id = arr[arr.length - 1]
-}
+// const handleChangeCascader = (arr) => {
+//   formData.value.product_category_id = arr[arr.length - 1]
+// }
 
 /**
  * 商品品牌数据
@@ -159,7 +155,6 @@ const submit = () => {
 }
 
 defineExpose({
-  // formData,
   submit
 })
 </script>
