@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-25 15:28:43
+ * @Last Modified time: 2021-10-25 16:14:55
  */
 <template>
   <div>
@@ -135,7 +135,8 @@ const formData = reactive({
 const rules = {
   title: [{ required: true, message: '不能为空', trigger: 'blur' }],
   recommend_status: [{ required: true, message: '不能为空', trigger: 'change' }],
-  show_status: [{ required: true, message: '不能为空', trigger: 'change' }]
+  show_status: [{ required: true, message: '不能为空', trigger: 'change' }],
+  category_id: [{ required: true, message: '不能为空', trigger: 'change' }]
 }
 
 const { token, uploadSuccess, beforeUpload, uploadData } = useUploadHooks({})

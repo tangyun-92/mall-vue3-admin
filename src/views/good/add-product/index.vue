@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-11 16:40:06
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-22 14:08:11
+ * @Last Modified time: 2021-10-25 16:45:00
  新增商品
  */
 <template>
@@ -32,7 +32,9 @@
             :edit-id="editId"
           />
         </div>
-        <div v-if="active === 3">商品关联</div>
+        <div v-if="active === 3">
+          <Relevance ref="relevance" v-model="productDetail" :edit-id="editId" />
+        </div>
       </div>
       <div class="btn">
         <el-button
@@ -64,6 +66,7 @@ import { useRoute, useRouter } from 'vue-router'
 import Info from './components/info.vue'
 import Promotion from './components/promotion.vue'
 import Attribute from './components/attribute.vue'
+import Relevance from './components/relevance.vue'
 import { createOrEditProduct, getProductDetail } from '@/api/good/product'
 import { ElMessage } from 'element-plus'
 
@@ -112,7 +115,9 @@ const productDetail = reactive({
   promotion_price: null,
   product_attribute_category_id: null, // 属性类型
   skuTableData: [], // sku库存 table 数据
-  productAttributeValueList: [] // 商品属性值列表
+  productAttributeValueList: [], // 商品属性值列表
+  subjectIds: [], // 关联的主题
+  preferenceIds: [] // 关联的优选
 })
 
 const getProDetail = () => {
