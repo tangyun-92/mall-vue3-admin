@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-29 10:37:09
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-25 15:28:43
+ * @Last Modified time: 2021-10-25 15:29:14
  */
 <template>
   <div>
@@ -16,38 +16,11 @@
       size="small"
       :disabled="status === 'details'"
     >
-      <el-form-item label="标题" prop="title">
-        <el-input v-model.trim="formData.title" placeholder="请输入"></el-input>
+      <el-form-item label="名称" prop="name">
+        <el-input v-model.trim="formData.name" placeholder="请输入"></el-input>
       </el-form-item>
-      <el-form-item label="分类" prop="category_id">
-        <el-select
-          v-model="formData.category_id"
-          placeholder="请选择"
-          clearable
-        >
-          <el-option
-            v-for="item in subjectCategoryList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否推荐" prop="recommend_status">
-        <el-select
-          v-model="formData.recommend_status"
-          placeholder="请选择"
-          clearable
-        >
-          <el-option
-            v-for="item in recommendStatus"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
+      <el-form-item label="副标题" prop="sub_title">
+        <el-input v-model.trim="formData.sub_title" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="是否显示" prop="show_status">
         <el-select
@@ -64,15 +37,13 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="描述" prop="description">
+      <el-form-item label="排序" prop="sort">
         <el-input
-          v-model.trim="formData.description"
-          type="textarea"
-          :rows="5"
+          v-model.trim="formData.sort"
           placeholder="请输入"
         ></el-input>
       </el-form-item>
-      <el-form-item label="专题图片" prop="pic">
+      <el-form-item label="优选主题图片" prop="pic">
         <el-upload
           class="avatar-uploader"
           :action="uploadUrl"
@@ -95,10 +66,10 @@
 
 <script setup>
 import { defineExpose, defineProps, onMounted, reactive, ref } from 'vue'
-import { createOrEditSubject } from '@/api/marketing/subject'
+import { createOrEditPreference } from '@/api/marketing/preference'
 import { ElMessage } from 'element-plus'
 import useUploadHooks from '@/hooks/useUploadHooks'
-import { ifShow, recommendStatus } from '@/constants/dictionary'
+import { ifShow } from '@/constants/dictionary'
 
 const props = defineProps({
   data: {
@@ -107,34 +78,26 @@ const props = defineProps({
       return {}
     }
   },
-  subjectCategoryList: {
-    type: Array,
-    default() {
-      return []
-    }
-  },
   status: {
     type: String,
     default: 'create'
   }
 })
 
-const uploadUrl = window._BASE_CONFIG.baseUrl + '/cms/subjects/upload'
+const uploadUrl = window._BASE_CONFIG.baseUrl + '/cms/preferences/upload'
 const formRef = ref(null)
 // 表单数据
 const formData = reactive({
-  title: '',
-  category_id: null,
-  recommend_status: null,
+  name: '',
+  sub_title: '',
   show_status: null,
   pic: '',
-  description: '',
+  sort: null,
   id: null
 })
 // 校验规则
 const rules = {
-  title: [{ required: true, message: '不能为空', trigger: 'blur' }],
-  recommend_status: [{ required: true, message: '不能为空', trigger: 'change' }],
+  name: [{ required: true, message: '不能为空', trigger: 'blur' }],
   show_status: [{ required: true, message: '不能为空', trigger: 'change' }]
 }
 
@@ -152,7 +115,7 @@ const submit = () => {
   return new Promise((resolve, resject) => {
     formRef.value.validate(async (valid) => {
       if (valid) {
-        const res = await createOrEditSubject({
+        const res = await createOrEditPreference({
           ...formData,
           pic: uploadData.imageUrl
         })

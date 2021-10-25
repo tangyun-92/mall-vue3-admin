@@ -103,6 +103,12 @@ export const constantRoutes = [
             component: () => import('@/views/marketing/subject/index.vue'),
             name: 'Subject',
             meta: { title: '专题管理', icon: 'el-icon-position' }
+          },
+          {
+            path: '/marketing/preference',
+            component: () => import('@/views/marketing/preference/index.vue'),
+            name: 'Preference',
+            meta: { title: '优选主题管理', icon: 'el-icon-position' }
           }
         ]
       }
