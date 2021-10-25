@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-22 16:06:44
+ * @Last Modified time: 2021-10-25 14:19:10
  专题管理
  */
 <template>
@@ -10,13 +10,64 @@
     <!-- 搜索 -->
     <div class="search-container">
       <el-form ref="form" :model="searchData" label-width="100px" size="small">
-        <el-form-item label="品牌名称">
+        <el-form-item label="专题标题">
           <el-input
-            v-model="searchData.name"
+            v-model="searchData.title"
             clearable
             placeholder="请输入"
             @keydown.enter="getTableList"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="专题分类">
+          <el-select
+            v-model="searchData.category_id"
+            placeholder="请选择"
+            clearable
+            filterable
+            @change="getTableList"
+          >
+            <el-option
+              v-for="item in subjectCategoryList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否显示">
+          <el-select
+            v-model="searchData.show_status"
+            placeholder="请选择"
+            clearable
+            filterable
+            @change="getTableList"
+          >
+            <el-option
+              v-for="item in ifShow"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否推荐">
+          <el-select
+            v-model="searchData.recommend_status"
+            placeholder="请选择"
+            clearable
+            filterable
+            @change="getTableList"
+          >
+            <el-option
+              v-for="item in recommendStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <el-button
@@ -42,7 +93,7 @@
           @click="
             multipleSelectionHandler({
               operation: '删除',
-              reqFn: delBrand,
+              reqFn: delSubject,
               data: {
                 id: selectIds
               }
@@ -59,28 +110,27 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="logo" label="品牌logo" width="120">
+          <el-table-column prop="pic" label="专题图片" width="120">
             <template #default="scope">
-              <img v-if="scope.row.logo" class="brand-logo" :src="scope.row.logo" alt="" />
+              <img v-if="scope.row.pic" class="brand-logo" :src="scope.row.pic" alt="" />
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="品牌名称"> </el-table-column>
-          <el-table-column prop="first_letter" label="品牌首字母" width="120"> </el-table-column>
-          <el-table-column prop="factory_status" label="是否为品牌制造商" width="150">
+          <el-table-column prop="title" label="标题"> </el-table-column>
+          <el-table-column prop="subject_category_name" label="分类"> </el-table-column>
+          <el-table-column prop="recommend_status" label="是否推荐" width="150">
             <template #default="scope">
-              <el-tag v-if="scope.row.factory_status === 1" type="success">是</el-tag>
-              <el-tag v-if="scope.row.factory_status === 0" type="danger">否</el-tag>
+              <el-tag v-if="scope.row.recommend_status === 2" type="success">推荐</el-tag>
+              <el-tag v-if="scope.row.recommend_status === 1" type="danger">不推荐</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="show_status" label="是否显示" width="120">
             <template #default="scope">
-              <el-tag v-if="scope.row.show_status === 1" type="success">是</el-tag>
-              <el-tag v-if="scope.row.show_status === 0" type="danger">否</el-tag>
+              <el-tag v-if="scope.row.show_status === 1" type="success">显示</el-tag>
+              <el-tag v-if="scope.row.show_status === 0" type="danger">不显示</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="product_count" label="产品数量" width="120">
+          <el-table-column prop="create_time" label="发布时间" width="150">
           </el-table-column>
-          <el-table-column prop="product_comment_count" label="产品评论数量" width="120"> </el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
               <el-button
@@ -94,7 +144,7 @@
                 @click="
                   multipleSelectionHandler({
                     operation: '删除',
-                    reqFn: delBrand,
+                    reqFn: delSubject,
                     data: {
                       id: String(scope.row.id).split(' ')
                     },
@@ -131,6 +181,7 @@
           ref="formRef"
           :status="data.dialogStatus"
           :data="data.formData"
+          :subject-category-list="subjectCategoryList"
         ></Form>
       </div>
       <template #footer>
@@ -151,24 +202,28 @@
 </template>
 
 <script setup>
-import { getBrand, delBrand } from '@/api/good/brand'
+import { getSubject, delSubject, findSubjectCategory } from '@/api/marketing/subject'
 import useBaseHooks from '@/hooks/useBaseHooks'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import Form from './components/Form.vue'
+import { recommendStatus, ifShow } from '@/constants/dictionary'
 
 const formRef = ref(null)
 // 搜索数据
 const searchData = reactive({
-  name: ''
+  title: '',
+  recommend_status: '',
+  show_status: '',
+  category_id: ''
 })
 // 默认表单数据
 const formDataDefault = reactive({
-  name: '',
-  first_letter: '',
-  factory_status: null,
+  title: '',
+  category_id: null,
+  recommend_status: null,
   show_status: null,
-  logo: '',
-  brand_story: '',
+  pic: '',
+  description: '',
   id: null
 })
 
@@ -182,7 +237,17 @@ const {
   handleSelectionChange,
   multipleSelectionHandler,
   selectIds
-} = useBaseHooks({ reqFn: getBrand, searchData, formDataDefault })
+} = useBaseHooks({ reqFn: getSubject, searchData, formDataDefault })
+
+onMounted(() => {
+  getSubjectCategoryList()
+})
+const subjectCategoryList = ref([])
+const getSubjectCategoryList = () => {
+  findSubjectCategory().then(res => {
+    subjectCategoryList.value = res.data.records
+  })
+}
 
 // 新增/编辑表单提交
 const handleSubmit = () => {
@@ -196,7 +261,7 @@ const handleSubmit = () => {
 
 <style lang="scss" scoped>
 .brand-logo {
-  width: 50px;
+  width: 80px;
   height: 50px;
   object-fit: cover;
 }
