@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-29 16:58:02
+ * @Last Modified time: 2021-10-29 17:08:04
  商品管理
  */
 <template>
@@ -179,7 +179,7 @@
               >未审核</el-tag>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column fixed="right" label="操作" width="150">
             <template #default="scope">
               <el-button
                 type="text"
@@ -382,10 +382,12 @@ const verifyFormData = reactive({
   status: null,
   detail: ''
 })
+// 弹窗
 const handleVerify = (row) => {
   verifyDialogVisible.value = true
   verifyFormData.product_id = row.id
 }
+// 提交
 const handleSubmitVerify = () => {
   console.log(verifyFormRef.value)
   verifyFormRef.value.submit().then(async () => {
@@ -399,6 +401,7 @@ const handleSubmitVerify = () => {
  */
 const recordDialogVisible = ref(null)
 const verifyRecordTableData = ref([])
+// 弹窗
 const handleVerifyRecord = async (row) => {
   const res = await verifyRecord({ id: row.id })
   recordDialogVisible.value = true
@@ -410,6 +413,7 @@ const handleVerifyRecord = async (row) => {
  */
 const operateDialogVisible = ref(null)
 const operateTableData = ref([])
+// 弹窗
 const handleOperateRecord = async (row) => {
   const res = await operateRecord({ id: row.id })
   operateDialogVisible.value = true

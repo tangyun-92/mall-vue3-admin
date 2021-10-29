@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-10-29 14:29:10
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-29 15:54:59
+ * @Last Modified time: 2021-10-29 17:08:23
  商品审核 Form
  */
 <template>
@@ -17,15 +17,6 @@
       size="small"
     >
       <el-form-item label="审核" prop="status">
-        <!-- <el-select v-model="formData.status" placeholder="请选择" clearable>
-          <el-option
-            v-for="item in verifyStatus"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select> -->
         <el-radio-group v-model="formData.status">
           <el-radio label="1">通过</el-radio>
           <el-radio label="2">不通过</el-radio>
@@ -44,7 +35,6 @@
 
 <script setup>
 import { computed, defineProps, ref, defineExpose, onMounted, reactive } from 'vue'
-import { verifyStatus } from '@/constants/dictionary'
 import { ElMessage } from 'element-plus'
 import { verifyProduct } from '@/api/good/product'
 
