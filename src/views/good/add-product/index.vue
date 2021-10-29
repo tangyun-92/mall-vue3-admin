@@ -117,7 +117,8 @@ const productDetail = reactive({
   skuTableData: [], // sku库存 table 数据
   productAttributeValueList: [], // 商品属性值列表
   subjectIds: [], // 关联的主题
-  preferenceIds: [] // 关联的优选
+  preferenceIds: [], // 关联的优选
+  ladderTableData: [{ count: 0, discount: 0 }] // 阶梯价格 table 数据
 })
 
 const getProDetail = () => {
@@ -172,6 +173,13 @@ const prev = () => {
 }
 // 提交
 const submit = () => {
+  // 计算阶梯价格折后价
+  const ladderTableData = productDetail.ladderTableData
+  ladderTableData.forEach(item => {
+    if (item.discount !== 0 && item.count !== 0) {
+      item.price = Number(item.discount) / 10 * Number(productDetail.price)
+    }
+  })
   createOrEditProduct({
     ...productDetail,
     service_ids: productDetail.service_ids.join(',')

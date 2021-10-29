@@ -124,6 +124,27 @@
           ></el-input>
         </el-form-item>
       </div>
+      <!-- 阶梯价格 -->
+      <div v-if="currentPromotionType === 4" class="ladder">
+        <el-table style="width:100%;" :data="formData.ladderTableData">
+          <el-table-column label="满足商品数量">
+            <template #default="scope">
+              <el-input v-model="scope.row.count" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="折扣">
+            <template #default="scope">
+              <el-input v-model="scope.row.discount" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="text" size="small" @click="handleDeleteLadder(scope.$index, scope.row)">删除</el-button>
+              <el-button type="text" size="small" @click="handleAddLadder">添加</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </el-form>
   </div>
 </template>
@@ -131,6 +152,7 @@
 <script setup>
 import { defineProps, ref, defineExpose, computed, onMounted } from 'vue'
 import { productService, promotionType } from '@/constants/dictionary'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -163,6 +185,26 @@ const currentPromotionType = ref(null)
 // 切换优惠方式
 const changePromotionType = (val) => {
   currentPromotionType.value = val
+}
+
+/**
+ * 阶梯价格
+ */
+// 删除阶梯价格
+const handleDeleteLadder = (index, row) => {
+  if (formData.value.ladderTableData.length > 1) {
+    formData.value.ladderTableData.splice(index, 1)
+  } else {
+    ElMessage.warning('无法删除最后一条数据！')
+  }
+}
+
+// 添加阶梯价格
+const handleAddLadder = () => {
+  formData.value.ladderTableData.push({
+    count: 0,
+    discount: 0
+  })
 }
 
 const submit = () => {
@@ -198,6 +240,13 @@ defineExpose({
   margin: 0 auto;
   .el-input {
     width: 220px;
+  }
+}
+.ladder {
+  width: 450px;
+  margin: 0 auto;
+  .el-input {
+    width: 100%;
   }
 }
 </style>
