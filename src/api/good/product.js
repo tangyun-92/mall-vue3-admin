@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-02 11:17:28
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-29 15:20:32
+ * @Last Modified time: 2021-10-29 16:54:33
  * 商品
  */
 import request from '@/utils/request'
@@ -93,6 +93,19 @@ export function verifyProduct(data) {
 export function verifyRecord(data) {
   return request({
     url: 'pms/products/verifyRecord',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 操作记录
+ * @param {*} data
+ * @returns
+ */
+export function operateRecord(data) {
+  return request({
+    url: 'pms/products/operateLog',
     method: 'post',
     data
   })

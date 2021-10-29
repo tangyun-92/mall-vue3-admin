@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-29 15:51:27
+ * @Last Modified time: 2021-10-29 16:58:02
  商品管理
  */
 <template>
@@ -210,6 +210,11 @@
                 size="small"
                 @click="handleVerifyRecord(scope.row)"
               >审核记录</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleOperateRecord(scope.row)"
+              >操作记录</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -270,12 +275,31 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 操作记录 -->
+    <el-dialog
+      v-if="operateDialogVisible"
+      v-model="operateDialogVisible"
+      title="审核记录"
+      width="1200px"
+    >
+      <div>
+        <OperateRecord :table-data="operateTableData" />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="operateDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { getBrandMap } from '@/api/good/brand'
-import { getProduct, delProduct, verifyRecord } from '@/api/good/product'
+import { getProduct, delProduct, verifyRecord, operateRecord } from '@/api/good/product'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -284,6 +308,7 @@ import { getGoodsCategory } from '@/api/good/category'
 import { ElMessage } from 'element-plus'
 import VerifyForm from './components/VerifyForm.vue'
 import VerifyRecord from './components/VerifyRecord.vue'
+import OperateRecord from './components/OperateRecord.vue'
 
 const router = useRouter()
 
@@ -378,6 +403,17 @@ const handleVerifyRecord = async (row) => {
   const res = await verifyRecord({ id: row.id })
   recordDialogVisible.value = true
   verifyRecordTableData.value = res.data.records
+}
+
+/**
+ * 操作记录
+ */
+const operateDialogVisible = ref(null)
+const operateTableData = ref([])
+const handleOperateRecord = async (row) => {
+  const res = await operateRecord({ id: row.id })
+  operateDialogVisible.value = true
+  operateTableData.value = res.data.records
 }
 </script>
 
