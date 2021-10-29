@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-08-02 11:17:28
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-15 10:13:44
+ * @Last Modified time: 2021-10-29 15:20:32
  * 商品
  */
 import request from '@/utils/request'
@@ -67,6 +67,32 @@ export function delProduct(data) {
 export function uploadImage(data) {
   return request({
     url: 'pms/products/upload',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 审核商品
+ * @param {*} data
+ * @returns
+ */
+export function verifyProduct(data) {
+  return request({
+    url: 'pms/products/verify',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 审核记录
+ * @param {*} data
+ * @returns
+ */
+export function verifyRecord(data) {
+  return request({
+    url: 'pms/products/verifyRecord',
     method: 'post',
     data
   })

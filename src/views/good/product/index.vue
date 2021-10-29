@@ -2,7 +2,7 @@
  * @Author: 唐云
  * @Date: 2021-07-24 22:27:13
  * @Last Modified by: 唐云
- * @Last Modified time: 2021-10-22 16:00:32
+ * @Last Modified time: 2021-10-29 15:51:27
  商品管理
  */
 <template>
@@ -113,7 +113,10 @@
           <el-table-column type="selection" width="55"> </el-table-column>
           <el-table-column prop="pic" label="商品图片">
             <template #default="scope">
-              <img style="width: 60px; height: 60px; object-fit:cover;" :src="scope.row.pic" />
+              <img
+                style="width: 60px; height: 60px; object-fit: cover"
+                :src="scope.row.pic"
+              />
             </template>
           </el-table-column>
           <el-table-column prop="name" label="商品名称"> </el-table-column>
@@ -121,27 +124,59 @@
           <el-table-column prop="product_sn" label="货号"> </el-table-column>
           <el-table-column prop="publish_status" label="上架状态" width="100">
             <template #default="scope">
-              <el-tag v-if="scope.row.publish_status === 2" type="success">上架</el-tag>
-              <el-tag v-if="scope.row.publish_status === 1" type="danger">下架</el-tag>
+              <el-tag
+                v-if="scope.row.publish_status === 2"
+                type="success"
+              >上架</el-tag>
+              <el-tag
+                v-if="scope.row.publish_status === 1"
+                type="danger"
+              >下架</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="new_status" label="新品状态" width="100">
             <template #default="scope">
-              <el-tag v-if="scope.row.new_status === 2" type="success">新品</el-tag>
-              <el-tag v-if="scope.row.new_status === 1" type="danger">不是新品</el-tag>
+              <el-tag
+                v-if="scope.row.new_status === 2"
+                type="success"
+              >新品</el-tag>
+              <el-tag
+                v-if="scope.row.new_status === 1"
+                type="danger"
+              >不是新品</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="recommend_status" label="推荐状态" width="100">
             <template #default="scope">
-              <el-tag v-if="scope.row.recommend_status === 2" type="success">推荐</el-tag>
-              <el-tag v-if="scope.row.recommend_status === 1" type="danger">不推荐</el-tag>
+              <el-tag
+                v-if="scope.row.recommend_status === 2"
+                type="success"
+              >推荐</el-tag>
+              <el-tag
+                v-if="scope.row.recommend_status === 1"
+                type="danger"
+              >不推荐</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="sale" label="销量" width="100"></el-table-column>
-          <el-table-column prop="verify_status" label="审核状态" width="100">
+          <el-table-column
+            prop="sale"
+            label="销量"
+            width="100"
+          ></el-table-column>
+          <el-table-column prop="verify_status" label="审核状态" width="120">
             <template #default="scope">
-              <el-tag v-if="scope.row.verifyStatus === 2" type="success">审核通过</el-tag>
-              <el-tag v-if="scope.row.verifyStatus === 1" type="danger">未审核</el-tag>
+              <el-tag
+                v-if="scope.row.verify_status === 2"
+                type="danger"
+              >审核不通过</el-tag>
+              <el-tag
+                v-if="scope.row.verify_status === 1"
+                type="success"
+              >审核通过</el-tag>
+              <el-tag
+                v-if="scope.row.verify_status === 0 || !scope.row.verify_status"
+                type="primary"
+              >未审核</el-tag>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
@@ -165,6 +200,16 @@
                   })
                 "
               >删除</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleVerify(scope.row)"
+              >审核</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="handleVerifyRecord(scope.row)"
+              >审核记录</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -182,17 +227,63 @@
       @current-change="handleCurrentChange"
     >
     </el-pagination>
+    <!-- 审核商品 -->
+    <el-dialog
+      v-if="verifyDialogVisible"
+      v-model="verifyDialogVisible"
+      title="审核商品"
+      width="400px"
+    >
+      <div>
+        <VerifyForm ref="verifyFormRef" :data="verifyFormData" />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="verifyDialogVisible = false"
+          >取 消</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="handleSubmitVerify"
+          >确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 审核记录 -->
+    <el-dialog
+      v-if="recordDialogVisible"
+      v-model="recordDialogVisible"
+      title="审核记录"
+      width="1000px"
+    >
+      <div>
+        <VerifyRecord :table-data="verifyRecordTableData" />
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            size="small"
+            @click="recordDialogVisible = false"
+          >关 闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { getBrandMap } from '@/api/good/brand'
-import { getProduct, delProduct } from '@/api/good/product'
+import { getProduct, delProduct, verifyRecord } from '@/api/good/product'
 import useBaseHooks from '@/hooks/useBaseHooks'
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { publishStatus } from '@/constants/dictionary'
 import { getGoodsCategory } from '@/api/good/category'
+import { ElMessage } from 'element-plus'
+import VerifyForm from './components/VerifyForm.vue'
+import VerifyRecord from './components/VerifyRecord.vue'
 
 const router = useRouter()
 
@@ -224,7 +315,7 @@ onMounted(() => {
 const brandList = ref([])
 // 获取品牌列表
 const getBrandList = () => {
-  getBrandMap().then(res => {
+  getBrandMap().then((res) => {
     brandList.value = res.data.records
   })
 }
@@ -237,7 +328,7 @@ const cascaderProps = reactive({
 })
 // 获取商品分类列表
 const getProductCategoryList = () => {
-  getGoodsCategory().then(res => {
+  getGoodsCategory().then((res) => {
     productCategoryList.value = res.data.records
   })
 }
@@ -256,6 +347,38 @@ const handleUpdate = (row) => {
   })
 }
 
+/**
+ * 审核商品
+ */
+const verifyDialogVisible = ref(null)
+const verifyFormRef = ref(null)
+const verifyFormData = reactive({
+  product_id: null,
+  status: null,
+  detail: ''
+})
+const handleVerify = (row) => {
+  verifyDialogVisible.value = true
+  verifyFormData.product_id = row.id
+}
+const handleSubmitVerify = () => {
+  console.log(verifyFormRef.value)
+  verifyFormRef.value.submit().then(async () => {
+    verifyDialogVisible.value = false
+    getTableList()
+  })
+}
+
+/**
+ * 审核记录
+ */
+const recordDialogVisible = ref(null)
+const verifyRecordTableData = ref([])
+const handleVerifyRecord = async (row) => {
+  const res = await verifyRecord({ id: row.id })
+  recordDialogVisible.value = true
+  verifyRecordTableData.value = res.data.records
+}
 </script>
 
 <style lang="scss" scoped></style>
