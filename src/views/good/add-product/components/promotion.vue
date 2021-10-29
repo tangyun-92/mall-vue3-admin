@@ -145,6 +145,27 @@
           </el-table-column>
         </el-table>
       </div>
+      <!-- 满减价格 -->
+      <div v-if="currentPromotionType === 5" class="ladder">
+        <el-table style="width:100%;" :data="formData.fullReduceTableData">
+          <el-table-column label="满足金额">
+            <template #default="scope">
+              <el-input v-model="scope.row.full_price" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="立减金额">
+            <template #default="scope">
+              <el-input v-model="scope.row.reduce_price" size="small"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right">
+            <template #default="scope">
+              <el-button type="text" size="small" @click="handleDeleteFullReduce(scope.$index, scope.row)">删除</el-button>
+              <el-button type="text" size="small" @click="handleAddFullReduce">添加</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </el-form>
   </div>
 </template>
@@ -175,6 +196,12 @@ const formData = computed(() => {
 
 onMounted(() => {
   changePromotionType(formData.value.promotion_type)
+  if (formData.value.ladderTableData.length === 0) {
+    formData.value.ladderTableData.push({ count: 0, discount: 0 })
+  }
+  if (formData.value.fullReduceTableData.length === 0) {
+    formData.value.fullReduceTableData.push({ full_price: 0, reduce_price: 0 })
+  }
 })
 
 /**
@@ -198,12 +225,30 @@ const handleDeleteLadder = (index, row) => {
     ElMessage.warning('无法删除最后一条数据！')
   }
 }
-
 // 添加阶梯价格
 const handleAddLadder = () => {
   formData.value.ladderTableData.push({
     count: 0,
     discount: 0
+  })
+}
+
+/**
+ * 满减价格
+ */
+// 删除满减价格
+const handleDeleteFullReduce = (index, row) => {
+  if (formData.value.fullReduceTableData.length > 1) {
+    formData.value.fullReduceTableData.splice(index, 1)
+  } else {
+    ElMessage.warning('无法删除最后一条数据！')
+  }
+}
+// 添加满减价格
+const handleAddFullReduce = () => {
+  formData.value.fullReduceTableData.push({
+    full_price: 0,
+    reduce_price: 0
   })
 }
 

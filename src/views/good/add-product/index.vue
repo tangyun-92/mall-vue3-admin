@@ -118,7 +118,8 @@ const productDetail = reactive({
   productAttributeValueList: [], // 商品属性值列表
   subjectIds: [], // 关联的主题
   preferenceIds: [], // 关联的优选
-  ladderTableData: [{ count: 0, discount: 0 }] // 阶梯价格 table 数据
+  ladderTableData: [{ count: 0, discount: 0 }], // 阶梯价格 table 数据
+  fullReduceTableData: [{ full_price: 0, reduce_price: 0 }] // 满减价格 table 数据
 })
 
 const getProDetail = () => {
